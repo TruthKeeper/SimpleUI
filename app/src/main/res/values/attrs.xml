@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ScratchView">
+        <attr name="stroke" format="dimension" />
+        <attr name="coverColor" format="color" />
+        <attr name="activity" format="float" />
+    </declare-styleable>
+</resources>
