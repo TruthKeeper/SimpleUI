@@ -1,184 +1,244 @@
 package com.tk.simpleui.ratingbar;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
+import android.support.v7.widget.TintTypedArray;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
-import com.allhatch.ehatch.R;
-import com.allhatch.ehatch.util.DensityUtil;
+import com.tk.simpleui.R;
+import com.tk.simpleui.common.DensityUtil;
 
 
 /**
- * Created by TK on 2016/2/27.
- * 自定义 效果ratingbar
+ * Created by TK on 2016/12/27.
+ * 可以调节间距
  * setrating 支持float半颗星高亮
  * starChecked 支持点击选择
  */
-public class TRatingbar extends LinearLayout {
+public class TRatingbar extends View {
+    private static final PorterDuffXfermode MODE = new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER);
     private static final int STAR_SUM = 5;
-    private static final int STAR_COUNT = 0;
-    //默认5dp间距
+    private static final int STAR_RATING = 0;
+    /**
+     * 默认5dp间距
+     */
     private static final int DEFAULT_PADDING = 5;
-    public static final int DEFAULT_EMPTY = R.drawable.star_off;
-    public static final int DEFAULT_FILL = R.drawable.star_on;
 
-    private int starImageSize;
-    private int starSum;
-    private float starCount;
-    private int starPadding;
-    private Drawable starEmptyDrawable;
-    private Drawable starFillDrawable;
-    private boolean starChecked = false;
+    private int mStarSize;
+    private int mStarSum;
+    private float mStarRating;
+    private int mStarPadding;
+    private Drawable mStarEmptyDrawable;
+    private Drawable mStarFillDrawable;
+    private boolean mStarChecked = false;
+
+    private Bitmap mStarEmptyBitmap;
+    private Bitmap mStarFillBitmap;
+    private Paint mPaint = new Paint();
+
+    //    private float mLastX;
+//    private float mLastY;
     private OnRatingChangeListener onRatingChangeListener;
 
-
-    public TRatingbar(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init(context, attrs);
+    public TRatingbar(Context context) {
+        super(context);
+        init();
     }
 
     public TRatingbar(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs);
+        initAttrs(attrs);
+        init();
     }
 
+    private void initAttrs(AttributeSet attrs) {
+        if (attrs != null) {
+            TintTypedArray array = TintTypedArray.obtainStyledAttributes(getContext(), attrs, R.styleable.TRatingbar);
+            //默认大小wrap_content
+            mStarSize = array.getDimensionPixelOffset(R.styleable.TRatingbar_starImageSize, ViewGroup.LayoutParams.WRAP_CONTENT);
+            mStarRating = array.getFloat(R.styleable.TRatingbar_starRating, STAR_RATING);
+            mStarSum = array.getInteger(R.styleable.TRatingbar_starSum, STAR_SUM);
+            mStarPadding = array.getDimensionPixelOffset(R.styleable.TRatingbar_starPadding, DensityUtil.dp2px(getContext(), DEFAULT_PADDING));
+            mStarEmptyDrawable = array.getDrawable(R.styleable.TRatingbar_starEmpty);
+            mStarFillDrawable = array.getDrawable(R.styleable.TRatingbar_starFill);
+            //是否允许点击评分
+            mStarChecked = array.getBoolean(R.styleable.TRatingbar_starClickable, false);
 
-    private void init(final Context context, AttributeSet attrs) {
-        setOrientation(LinearLayout.HORIZONTAL);
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.MyRatingBar);
-        //默认大小wrap_content
-        starImageSize = (int) ta.getDimension(R.styleable.MyRatingBar_starImageSize, ViewGroup.LayoutParams.WRAP_CONTENT);
-        //默认亮的星
-        starCount = ta.getFloat(R.styleable.MyRatingBar_starCount, STAR_COUNT);
-        //总共星
-        starSum = ta.getInteger(R.styleable.MyRatingBar_starSum, STAR_SUM);
-        //间距
-        starPadding = (int) ta.getDimension(R.styleable.MyRatingBar_starPadding, DensityUtil.dp2px(context, DEFAULT_PADDING));
-        //不亮的drawable
-        starEmptyDrawable = ta.getDrawable(R.styleable.MyRatingBar_starEmpty);
-        //亮的drawable
-        starFillDrawable = ta.getDrawable(R.styleable.MyRatingBar_starFill);
-        //是否允许点击评分
-        starChecked = ta.getBoolean(R.styleable.MyRatingBar_starClickable, false);
-        //默认值
-        starEmptyDrawable = starEmptyDrawable == null ? getResources().getDrawable(DEFAULT_EMPTY) : starEmptyDrawable;
-        starFillDrawable = starFillDrawable == null ? getResources().getDrawable(DEFAULT_FILL) : starFillDrawable;
-        ta.recycle();
-
-        for (int i = 0; i < starSum; i++) {
-            ImageView imageView = getStarImageView(context, i);
-            imageView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (starChecked) {
-                        int mStarCount = indexOfChild(v) + 1;
-                        setRating(mStarCount);
-                        if (onRatingChangeListener != null) {
-                            onRatingChangeListener.onRating(mStarCount);
-                        }
-                    }
-                }
-            });
-            addView(imageView);
-        }
-    }
-
-
-    private ImageView getStarImageView(Context context, int i) {
-        ImageView imageView = new ImageView(context);
-        imageView.setScaleType(ImageView.ScaleType.FIT_START);
-        LayoutParams para = new LayoutParams(starImageSize, starImageSize);
-        para.setMargins(Math.round(starPadding >> 1), 0, Math.round(starPadding >> 1), 0);
-        imageView.setLayoutParams(para);
-        if (i < starCount) {
-            if (starCount - i < 1) {
-                //小数
-                float s = starCount - i;
-                setHalfStar(imageView, s);
-            } else {
-                imageView.setImageDrawable(starFillDrawable);
+            if (mStarSum < 0) {
+                mStarSum = 1;
             }
-        } else {
-            imageView.setImageDrawable(starEmptyDrawable);
+            if (mStarRating < 0) {
+                mStarRating = 0;
+            } else if (mStarRating > mStarSum) {
+                mStarRating = mStarSum;
+            }
+            int s = getStarSize();
+            if (mStarEmptyDrawable != null) {
+                mStarEmptyBitmap = drawableToBitmap(mStarEmptyDrawable, s, s, s, s);
+            }
+            if (mStarFillDrawable != null) {
+                mStarFillBitmap = drawableToBitmap(mStarFillDrawable, s, s, s, s);
+            }
+            array.recycle();
+        }
+    }
+
+    private void init() {
+        setLayerType(LAYER_TYPE_SOFTWARE, null);
+        mPaint.setAntiAlias(true);
+        mPaint.setDither(true);
+        mPaint.setXfermode(MODE);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        if (mStarEmptyDrawable == null || mStarFillDrawable == null) {
+            return;
+        }
+        Rect rect = new Rect();
+        for (int i = 0; i < mStarSum; i++) {
+            if (mStarRating > i) {
+
+                if (i != mStarSum - 1 && mStarRating < i + 1) {
+                    //半星
+                    rect.top = getPaddingTop();
+                    rect.bottom = mStarEmptyBitmap.getHeight() + rect.top;
+                    rect.left = i * (mStarEmptyBitmap.getWidth() + mStarPadding);
+                    rect.right = (i + 1) * mStarEmptyBitmap.getWidth() + i * mStarPadding;
+                    canvas.drawBitmap(mStarEmptyBitmap, null, rect, mPaint);
+
+                    int s = getStarSize();
+                    Bitmap off = drawableToBitmap(mStarFillDrawable, (int) ((mStarRating - i) * s), s, s, s);
+                    rect.top = getPaddingTop();
+                    rect.bottom = mStarEmptyBitmap.getHeight() + rect.top;
+                    rect.left = i * (mStarEmptyBitmap.getWidth() + mStarPadding);
+                    rect.right = (int) (mStarRating * mStarEmptyBitmap.getWidth() + i * mStarPadding);
+                    canvas.drawBitmap(off, null, rect, mPaint);
+                } else {
+                    //全星
+                    rect.top = getPaddingTop();
+                    rect.bottom = mStarEmptyBitmap.getHeight() + rect.top;
+                    rect.left = i * (mStarEmptyBitmap.getWidth() + mStarPadding);
+                    rect.right = (i + 1) * mStarEmptyBitmap.getWidth() + i * mStarPadding;
+                    canvas.drawBitmap(mStarFillBitmap, null, rect, null);
+                }
+            } else {
+                //0星
+                rect.top = getPaddingTop();
+                rect.bottom = mStarEmptyBitmap.getHeight() + rect.top;
+                rect.left = i * (mStarEmptyBitmap.getWidth() + mStarPadding);
+                rect.right = (i + 1) * mStarEmptyBitmap.getWidth() + i * mStarPadding;
+                canvas.drawBitmap(mStarEmptyBitmap, null, rect, null);
+            }
 
         }
-        return imageView;
     }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int sizeW = MeasureSpec.getSize(widthMeasureSpec);
+        int modeW = MeasureSpec.getMode(widthMeasureSpec);
+        int sizeH = MeasureSpec.getSize(heightMeasureSpec);
+        int modeH = MeasureSpec.getMode(heightMeasureSpec);
+        int resultW = 0;
+        for (int i = 0; i < mStarSum; i++) {
+            resultW += getStarSize();
+        }
+        resultW += (mStarSum - 1) * mStarPadding;
+        int resultH = getStarSize();
+        setMeasuredDimension(modeW == MeasureSpec.EXACTLY ? sizeW : resultW + getPaddingLeft() + getPaddingRight(),
+                modeH == MeasureSpec.EXACTLY ? sizeH : resultH + getPaddingTop() + getPaddingBottom());
+    }
+
 
     /**
      * 设置几颗星
      *
-     * @param starCount
+     * @param rating
      */
-    public void setRating(float starCount) {
-        starCount = starCount > this.starSum ? this.starSum : starCount;
-        starCount = starCount < 0 ? 0 : starCount;
-        this.starCount = starCount;
-        for (int i = 0; i < starCount; ++i) {
-            if (starCount - i < 1) {
-                //小数
-                float s = starCount - i;
-                setHalfStar((ImageView) getChildAt(i), s);
-                return;
-            }
-            ((ImageView) getChildAt(i)).setImageDrawable(starFillDrawable);
+    public void setRating(float rating) {
+        if (rating != mStarRating && rating >= 0 && rating <= mStarSum) {
+            mStarRating = rating;
+            invalidate();
         }
-        for (int i = this.starSum - 1; i >= starCount; i--) {
 
-            ((ImageView) getChildAt(i)).setImageDrawable(starEmptyDrawable);
-        }
     }
 
-    /**
-     * 设置半星
-     *
-     * @param imagview
-     * @param space    0-1
-     */
-    private void setHalfStar(ImageView imagview, float space) {
-        if (((int) (starFillDrawable.getIntrinsicWidth() * space)) <= 0) {
-            imagview.setImageDrawable(starEmptyDrawable);
-            return;
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+//                mLastX = event.getX();
+//                mLastY = event.getY();
+                return true;
+            case MotionEvent.ACTION_MOVE:
+                break;
+            case MotionEvent.ACTION_UP:
+                if (!mStarChecked) {
+                    return false;
+                }
+                float x = event.getX();
+                float y = event.getY();
+                if (x < getPaddingLeft() || x > getWidth() || y < getPaddingTop() || y > getHeight()) {
+                    return false;
+                }
+                float rating = (x - getPaddingLeft()) / (getStarSize() + mStarPadding);
+                int r;
+                if (rating * 10 % 10 != 0) {
+                    r = (int) (rating + 1);
+                } else {
+                    r = (int) rating;
+                }
+                //不允许0星
+                if (r == 0) {
+                    r++;
+                } else if (r > mStarSum) {
+                    r = mStarSum;
+                }
+                setRating(r);
+                if (onRatingChangeListener != null) {
+                    onRatingChangeListener.onRating(r);
+                }
+
+                return true;
         }
-        if (space >= 1) {
-            imagview.setImageDrawable(starFillDrawable);
-            return;
-        }
-        Drawable[] drawables = {starEmptyDrawable,
-                drawableToBitmap(starFillDrawable,
-                        (int) (starFillDrawable.getIntrinsicWidth() * space),
-                        starFillDrawable.getIntrinsicHeight())};
-        LayerDrawable layerDrawable = new LayerDrawable(drawables);
-        layerDrawable.setLayerInset(0, 0, 0, 0, 0);
-        layerDrawable.setLayerInset(1, 0, 0, (int) (starFillDrawable.getIntrinsicWidth() * (1.0 - space)), 0);
-        imagview.setImageDrawable(layerDrawable);
+        return super.onTouchEvent(event);
     }
 
     /**
      * 裁剪
      *
      * @param drawable
-     * @param w
-     * @param h
+     * @param canvasW
+     * @param canvasH
+     * @param drawableW
+     * @param drawableH
      * @return
      */
-    private BitmapDrawable drawableToBitmap(Drawable drawable, int w, int h) {
-        int width = drawable.getIntrinsicWidth();
-        int height = drawable.getIntrinsicHeight();
-        Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+    private static Bitmap drawableToBitmap(Drawable drawable, int canvasW, int canvasH,
+                                           int drawableW, int drawableH) {
+        Bitmap bitmap = Bitmap.createBitmap(canvasW, canvasH, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, width, height);
+        drawable.setBounds(0, 0, drawableW, drawableH);
         drawable.draw(canvas);
-        return new BitmapDrawable(null, bitmap);
+        return bitmap;
+    }
+
+    private int getStarSize() {
+        if (mStarEmptyDrawable == null) {
+            return 0;
+        }
+        return mStarSize == ViewGroup.LayoutParams.WRAP_CONTENT ? mStarEmptyDrawable.getIntrinsicWidth() : mStarSize;
     }
 
     public interface OnRatingChangeListener {
@@ -189,7 +249,7 @@ public class TRatingbar extends LinearLayout {
         this.onRatingChangeListener = onRatingChangeListener;
     }
 
-    public float getStarCount() {
-        return starCount;
+    public float getRating() {
+        return mStarRating;
     }
 }

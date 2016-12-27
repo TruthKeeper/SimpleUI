@@ -76,24 +76,34 @@ public class PullableRecyclerView extends RecyclerView {
         addOnScrollListener(mOnScrollListener);
     }
 
-    public void setNestScrollState(int state) {
+    /**
+     * 嵌套的计算方案
+     *
+     * @param state
+     */
+    public void applyNestScrollState(int state) {
         if (getLayoutManager() instanceof LinearLayoutManager) {
+            //LinearLayoutManager会失效的Plan B
             LinearLayoutManager m = (LinearLayoutManager) getLayoutManager();
             if (state == SCROLL_STATE_IDLE
                     //有数据
                     && (sourceAdapter != null && sourceAdapter.getItemCount() != 0)
                     && (!isLoading)
                     && (!loadError)
-                    && (!isInTheEnd)
-                    && (m.findLastVisibleItemPosition() == m.getItemCount() - 1)
-                    && m.findFirstCompletelyVisibleItemPosition() != 0) {
-                //到达底部，开始执行加载
-                isLoading = true;
-                ((IEnd) endView).onInit();
-                endView.setVisibility(VISIBLE);
-                if (mOnLoadListener != null) {
-                    mOnLoadListener.onLoad(PullableRecyclerView.this);
+                    && (!isInTheEnd)) {
+                View view = m.findViewByPosition(m.getItemCount() - 1);
+                int[] location = new int[2];
+                view.getLocationInWindow(location);
+                if (location[1] <= getResources().getDisplayMetrics().heightPixels) {
+                    //可见了
+                    isLoading = true;
+                    ((IEnd) endView).onInit();
+                    endView.setVisibility(VISIBLE);
+                    if (mOnLoadListener != null) {
+                        mOnLoadListener.onLoad(PullableRecyclerView.this);
+                    }
                 }
+
             }
         }
 

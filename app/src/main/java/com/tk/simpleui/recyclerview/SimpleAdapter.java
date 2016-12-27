@@ -45,6 +45,7 @@ public class SimpleAdapter extends RecyclerView.Adapter<SimpleAdapter.ItemHolder
 
         public ItemHolder(View itemView) {
             super(itemView);
+
         }
     }
 

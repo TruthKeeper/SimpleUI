@@ -9,9 +9,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import com.tk.simpleui.R;
 import com.tk.simpleui.common.DensityUtil;
 import com.tk.simpleui.recyclerview.SimpleAdapter;
-import com.tk.simpleui.recyclerview.pull.EmptyLayout;
-import com.tk.simpleui.recyclerview.pull.EndLayout;
-import com.tk.simpleui.recyclerview.pull.PullableRecyclerView;
+import com.tk.simpleui.recyclerview.pull.common.EmptyLayout;
+import com.tk.simpleui.recyclerview.pull.common.EndLayout;
+import com.tk.simpleui.recyclerview.pull.common.PullableRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;

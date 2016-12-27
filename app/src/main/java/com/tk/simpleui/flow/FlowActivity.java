@@ -47,7 +47,7 @@ public class FlowActivity extends AppCompatActivity implements View.OnClickListe
         list2.addAll(list);
         flowLayout1.setAdapter(new FlowAdapter<String>(list1) {
             @Override
-            public View getView(ViewGroup parent, int position) {
+            public View getView(ViewGroup parent, int position, int itemViewType) {
                 TextView view = (TextView) LayoutInflater.from(parent.getContext()).inflate(R.layout.flow_item_1, parent, false);
                 view.setText(mList.get(position));
                 return view;
@@ -55,10 +55,9 @@ public class FlowActivity extends AppCompatActivity implements View.OnClickListe
         });
         flowLayout2.setAdapter(new FlowAdapter<String>(list2) {
             @Override
-            public View getView(ViewGroup parent, final int position) {
+            public View getView(ViewGroup parent, final int position, int itemViewType) {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.flow_item_2, parent, false);
                 ((TextView) view.findViewById(R.id.tag)).setText(mList.get(position));
-
                 return view;
             }
         });

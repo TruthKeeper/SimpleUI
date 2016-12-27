@@ -12,7 +12,7 @@ import com.tk.simpleui.R;
 import java.util.List;
 
 /**
- * Created by TK on 2016/11/29.
+ * Created by TK on 2016/12/25.
  */
 
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ItemHolder> {
@@ -28,7 +28,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ItemHolder> 
 
     @Override
     public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ItemHolder(mInflater.inflate(R.layout.list_simple_item, parent, false));
+        return new ItemHolder(mInflater.inflate(R.layout.list_video, parent, false));
     }
 
     @Override

@@ -29,7 +29,25 @@ public class NoLastItemDecoration extends PaddingItemDecoration {
     }
 
     public void drawVertical(Canvas c, RecyclerView parent) {
-        if (parent.getLayoutManager() instanceof LinearLayoutManager) {
+        if (parent.getLayoutManager() instanceof GridLayoutManager) {
+            int span = ((GridLayoutManager) parent.getLayoutManager()).getSpanCount();
+
+            final int left = parent.getPaddingLeft();
+            final int right = parent.getWidth() - parent.getPaddingRight();
+            final int childCount = parent.getChildCount();
+
+            int count = ((childCount - 1) / span) * span;
+            for (int i = 0; i < count; i++) {
+                final View child = parent.getChildAt(i);
+                final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
+                        .getLayoutParams();
+                final int top = child.getBottom() + params.bottomMargin +
+                        Math.round(ViewCompat.getTranslationY(child));
+                final int bottom = top + divider;
+                mDrawable.setBounds(left + paddingLeft, top, right - paddingRight, bottom);
+                mDrawable.draw(c);
+            }
+        } else if (parent.getLayoutManager() instanceof LinearLayoutManager) {
             final int left = parent.getPaddingLeft();
             final int right = parent.getWidth() - parent.getPaddingRight();
             final int childCount = parent.getChildCount();
@@ -43,25 +61,6 @@ public class NoLastItemDecoration extends PaddingItemDecoration {
                 mDrawable.setBounds(left + paddingLeft, top, right - paddingRight, bottom);
                 mDrawable.draw(c);
             }
-        } else if (parent.getLayoutManager() instanceof GridLayoutManager) {
-            int span = ((GridLayoutManager) parent.getLayoutManager()).getSpanCount();
-
-            final int left = parent.getPaddingLeft();
-            final int right = parent.getWidth() - parent.getPaddingRight();
-            final int childCount = parent.getChildCount();
-            int l = childCount / span;
-            int off = childCount % span;
-            for (int i = 0; i < (off == 0 ? l - 1 : l) * span; i++) {
-                final View child = parent.getChildAt(i);
-                final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
-                        .getLayoutParams();
-                final int top = child.getBottom() + params.bottomMargin +
-                        Math.round(ViewCompat.getTranslationY(child));
-                final int bottom = top + divider;
-                mDrawable.setBounds(left + paddingLeft, top, right - paddingRight, bottom);
-                mDrawable.draw(c);
-            }
-
         }
     }
 }

@@ -23,6 +23,7 @@ public class VideoListActivity extends AppCompatActivity {
         recyclerview.setLayoutManager(new LinearLayoutManager(this));
         recyclerview.setHasFixedSize(true);
         recyclerview.addItemDecoration(new NoLastItemDecoration(this, 0, 0));
+
     }
 
 

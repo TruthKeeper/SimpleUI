@@ -1,14 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <com.tk.simpleui.ratingbar.TRatingbar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:starEmpty="@drawable/vector_star_off"
+        app:starFill="@drawable/vector_star_on"
+        app:starImageSize="20dp"
+        app:starPadding="4dp"
+        app:starRating="2.25"
+        app:starSum="5" />
 
+    <com.tk.simpleui.ratingbar.TRatingbar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        app:starEmpty="@drawable/vector_star_off"
+        app:starFill="@drawable/vector_star_on"
+        app:starImageSize="28dp"
+        app:starPadding="10dp"
+        app:starRating="1.75"
+        app:starSum="3" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="↓评分↓"
+        android:textSize="16sp" />
+
+    <com.tk.simpleui.ratingbar.TRatingbar
+        android:id="@+id/ratingbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:starClickable="true"
+        app:starEmpty="@drawable/star_off"
+        app:starFill="@drawable/star_on"
+        app:starImageSize="32dp"
+        app:starPadding="8dp"
+        app:starSum="5" />
 </LinearLayout>

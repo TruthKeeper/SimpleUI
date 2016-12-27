@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
@@ -15,6 +16,7 @@ import android.view.MotionEvent;
 
 public class MagicNestedScrollView extends NestedScrollView {
     private static final int CHECK_WHAT = 233;
+    //20ms 校验一次
     private static final int DELAY = 20;
     private boolean isTouch;
     private int mLastY;
@@ -105,11 +107,11 @@ public class MagicNestedScrollView extends NestedScrollView {
         /**
          * 静止
          */
-        public static int SCROLL_STATE_IDLE = 0;
+        public static int SCROLL_STATE_IDLE = RecyclerView.SCROLL_STATE_IDLE;
         /**
          * 拖拽
          */
-        public static int SCROLL_STATE_DRAGGING = 1;
+        public static int SCROLL_STATE_DRAGGING = RecyclerView.SCROLL_STATE_DRAGGING;
         /**
          * 自由滑动
          */

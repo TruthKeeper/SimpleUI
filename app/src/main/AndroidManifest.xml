@@ -25,7 +25,16 @@
         <activity android:name=".ripple.RippleActivity" />
         <activity android:name=".flod.FlodActivity" />
         <activity android:name=".recyclerview.RecyclerViewActivity" />
-        <activity android:name=".recyclerview.pull.PullActivity" />
+        <activity android:name=".recyclerview.pull.normal.PullNormalActivity" />
+        <activity android:name=".recyclerview.pull.elegance.PullEleganceActivity" />
+        <activity android:name=".recyclerview.pull.magic.PullMagicActivity" />
+        <activity android:name=".recyclerview.Item.ItemDecorationActivity" />
+        <activity android:name=".recyclerview.layout.LayoutActivity" />
+        <activity android:name=".recyclerview.anim.AnimActivity" />
+        <activity android:name=".recyclerview.touch.TouchActivity" />
+        <activity android:name=".videolist.VideoListActivity" />
+        <activity android:name=".ratingbar.RatingBarActivity" />
+
     </application>
 
 </manifest>

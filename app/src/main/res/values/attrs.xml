@@ -1,8 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--刮奖-->
     <declare-styleable name="ScratchView">
+        <!--刮痕粗细-->
         <attr name="stroke" format="dimension" />
+        <!--蒙层颜色-->
         <attr name="coverColor" format="color" />
+        <!--触发阈值0f-1f-->
         <attr name="activity" format="float" />
+    </declare-styleable>
+    <!--TRatingBar-->
+    <declare-styleable name="TRatingbar">
+        <!--星星大小，正方形-->
+        <attr name="starImageSize" format="dimension" />
+        <!--左右边距-->
+        <attr name="starPadding" format="dimension" />
+        <!--最多数量-->
+        <attr name="starSum" format="integer" />
+        <!--高亮数量-->
+        <attr name="starRating" format="float" />
+        <!--是否可点击，默认false-->
+        <attr name="starClickable" format="boolean" />
+        <!--默认-->
+        <attr name="starEmpty" format="reference" />
+        <!--高亮-->
+        <attr name="starFill" format="reference" />
+
     </declare-styleable>
 </resources>

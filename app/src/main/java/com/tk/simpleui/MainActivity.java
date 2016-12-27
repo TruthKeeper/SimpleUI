@@ -12,10 +12,12 @@ import com.tk.simpleui.drag.DragActivity;
 import com.tk.simpleui.flod.FlodActivity;
 import com.tk.simpleui.flow.FlowActivity;
 import com.tk.simpleui.load.LoadActivity;
+import com.tk.simpleui.pulldetail.PullDetailActivity;
+import com.tk.simpleui.ratingbar.RatingBarActivity;
 import com.tk.simpleui.recyclerview.RecyclerViewActivity;
 import com.tk.simpleui.ripple.RippleActivity;
 import com.tk.simpleui.scratch.ScratchActivity;
-import com.tk.simpleui.pulldetail.PullDetailActivity;
+import com.tk.simpleui.videolist.VideoListActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
         mList.add(new Item("涟漪", new Intent(this, RippleActivity.class), false));
         mList.add(new Item("折叠布局", new Intent(this, FlodActivity.class), false));
         mList.add(new Item("One Piece：RecyclerView", new Intent(this, RecyclerViewActivity.class), false));
+        mList.add(new Item("List播放视频", new Intent(this, VideoListActivity.class), false));
+        mList.add(new Item("自定义RatingBar", new Intent(this, RatingBarActivity.class), true));
 
         adapter = new MainAdapter(this, mList);
         recyclerview.setAdapter(adapter);

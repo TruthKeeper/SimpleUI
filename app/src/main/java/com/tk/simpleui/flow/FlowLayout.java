@@ -1,6 +1,5 @@
 package com.tk.simpleui.flow;
 
-import android.animation.LayoutTransition;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -31,32 +30,25 @@ public class FlowLayout extends ViewGroup {
     }
 
     private void init() {
-        setLayoutTransition(new LayoutTransition());
     }
 
     public void setAdapter(FlowAdapter adapter) {
         if (adapter == null) {
             return;
         }
-
         if (mAdapter != null) {
             mAdapter.unregisterDataSetObserver(mDataObserver);
         }
         mAdapter = adapter;
         adapter.registerDataSetObserver(mDataObserver);
-        refresh(adapter.getItemCount());
+        refresh();
     }
 
-    private void refresh(int newCount) {
-        int oldCount = getChildCount();
-        if (oldCount > newCount) {
-            removeViews(newCount, oldCount - newCount);
-            requestLayout();
-        } else if (oldCount < newCount) {
-            for (int i = oldCount; i < newCount; i++) {
-                View child = mAdapter.getView(this, i);
-                addView(child);
-            }
+    private void refresh() {
+        removeAllViews();
+        for (int i = 0; i < mAdapter.getItemCount(); i++) {
+            View child = mAdapter.getView(this, i, mAdapter.getItemViewType(i));
+            addView(child);
         }
     }
 
@@ -168,7 +160,7 @@ public class FlowLayout extends ViewGroup {
 
     public class AdapterDataObserver {
         public void onChanged() {
-            refresh(mAdapter.getItemCount());
+            refresh();
         }
 
     }

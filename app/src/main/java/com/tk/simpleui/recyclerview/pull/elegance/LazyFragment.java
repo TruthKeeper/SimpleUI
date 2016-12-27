@@ -1,14 +1,14 @@
 package com.tk.simpleui.recyclerview.pull.elegance;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.View;
 
 /**
  * Created by TK on 2016/10/3.
  */
 
-public abstract class LazyFragment extends BaseFragment {
+public abstract class LazyFragment extends Fragment {
     private boolean onCreateView;
     private boolean hasLoad;
 
@@ -28,7 +28,7 @@ public abstract class LazyFragment extends BaseFragment {
 
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         onCreateView = true;
         if (getUserVisibleHint()) {

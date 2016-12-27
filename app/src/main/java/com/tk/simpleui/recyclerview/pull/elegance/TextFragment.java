@@ -57,8 +57,10 @@ public class TextFragment extends LazyFragment implements SwipeRefreshLayout.OnR
 
     @Override
     protected void onFragmentVisibleChange(boolean isVisible) {
-        swipeLayout.setRefreshing(true);
-        onRefresh();
+        if (isVisible) {
+            swipeLayout.setRefreshing(true);
+            onRefresh();
+        }
     }
 
     @Override

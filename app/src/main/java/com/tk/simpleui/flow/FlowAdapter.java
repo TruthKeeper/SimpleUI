@@ -21,6 +21,11 @@ public abstract class FlowAdapter<T> {
         this.mObservable = new AdapterDataObservable();
     }
 
+    public FlowAdapter(T[] mList) {
+        this.mList = new ArrayList<>(Arrays.asList(mList));
+        this.mObservable = new AdapterDataObservable();
+    }
+
     public void registerDataSetObserver(FlowLayout.AdapterDataObserver observer) {
         this.mObservable.registerObserver(observer);
     }
@@ -33,19 +38,20 @@ public abstract class FlowAdapter<T> {
         mObservable.notifyChanged();
     }
 
-    public FlowAdapter(T[] mList) {
-        this.mList = new ArrayList<>(Arrays.asList(mList));
-    }
 
     public int getItemCount() {
         return mList.size();
     }
 
+    public int getItemViewType(int position) {
+        return 0;
+    }
+
+    public abstract View getView(ViewGroup parent, int position, int itemViewType);
+
     public List<T> getList() {
         return mList;
     }
-
-    public abstract View getView(ViewGroup parent, int position);
 
     public static class AdapterDataObservable extends Observable<FlowLayout.AdapterDataObserver> {
 
