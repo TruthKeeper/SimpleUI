@@ -1,4 +1,4 @@
-package com.tk.simpleui.recyclerview.pull;
+package com.tk.simpleui.recyclerview.pull.common;
 
 /**
  * Created by TK on 2016/11/2.

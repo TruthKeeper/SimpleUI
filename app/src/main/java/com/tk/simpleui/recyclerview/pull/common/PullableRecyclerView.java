@@ -1,4 +1,4 @@
-package com.tk.simpleui.recyclerview.pull;
+package com.tk.simpleui.recyclerview.pull.common;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
@@ -76,12 +76,27 @@ public class PullableRecyclerView extends RecyclerView {
         addOnScrollListener(mOnScrollListener);
     }
 
-    public boolean isSlideToBottom() {
-        if (computeVerticalScrollExtent() + computeVerticalScrollOffset()
-                >= computeVerticalScrollRange()) {
-            return true;
+    public void setNestScrollState(int state) {
+        if (getLayoutManager() instanceof LinearLayoutManager) {
+            LinearLayoutManager m = (LinearLayoutManager) getLayoutManager();
+            if (state == SCROLL_STATE_IDLE
+                    //有数据
+                    && (sourceAdapter != null && sourceAdapter.getItemCount() != 0)
+                    && (!isLoading)
+                    && (!loadError)
+                    && (!isInTheEnd)
+                    && (m.findLastVisibleItemPosition() == m.getItemCount() - 1)
+                    && m.findFirstCompletelyVisibleItemPosition() != 0) {
+                //到达底部，开始执行加载
+                isLoading = true;
+                ((IEnd) endView).onInit();
+                endView.setVisibility(VISIBLE);
+                if (mOnLoadListener != null) {
+                    mOnLoadListener.onLoad(PullableRecyclerView.this);
+                }
+            }
         }
-        return false;
+
     }
 
     /**
@@ -213,8 +228,8 @@ public class PullableRecyclerView extends RecyclerView {
         }
     };
 
-    public void setmOnLoadListener(OnLoadListener mOnLoadListener) {
-        this.mOnLoadListener = mOnLoadListener;
+    public void setOnLoadListener(OnLoadListener onLoadListener) {
+        this.mOnLoadListener = onLoadListener;
     }
 
     public interface OnLoadListener {

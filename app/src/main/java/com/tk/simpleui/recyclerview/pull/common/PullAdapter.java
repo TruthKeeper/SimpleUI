@@ -1,4 +1,4 @@
-package com.tk.simpleui.recyclerview.pull;
+package com.tk.simpleui.recyclerview.pull.common;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

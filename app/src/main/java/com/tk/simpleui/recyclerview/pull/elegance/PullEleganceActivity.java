@@ -1,4 +1,4 @@
-package com.tk.simpleui.recyclerview.pull;
+package com.tk.simpleui.recyclerview.pull.elegance;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,13 +9,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import com.tk.simpleui.R;
 import com.tk.simpleui.common.DensityUtil;
 import com.tk.simpleui.recyclerview.SimpleAdapter;
+import com.tk.simpleui.recyclerview.pull.EmptyLayout;
+import com.tk.simpleui.recyclerview.pull.EndLayout;
+import com.tk.simpleui.recyclerview.pull.PullableRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 
-public class PullActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, PullableRecyclerView.OnLoadListener {
+public class PullEleganceActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, PullableRecyclerView.OnLoadListener {
 
     private SwipeRefreshLayout swipeLayout;
     private PullableRecyclerView pullView;
@@ -44,7 +47,7 @@ public class PullActivity extends AppCompatActivity implements SwipeRefreshLayou
         pullView.setEndView(new EndLayout(this));
         pullView.refreshComplete();
 
-        pullView.setmOnLoadListener(this);
+        pullView.setOnLoadListener(this);
         swipeLayout.setRefreshing(true);
         onRefresh();
     }
