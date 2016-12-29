@@ -30,6 +30,8 @@ public class RoundRectImageView extends ImageView {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        //给canvas加上抗锯齿实属性也没用
+//        canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.FILTER_BITMAP_FLAG|Paint.ANTI_ALIAS_FLAG));
         canvas.clipPath(mPath);
         super.onDraw(canvas);
 

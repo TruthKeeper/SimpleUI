@@ -20,8 +20,20 @@ public class ShapeCircleImageView extends ShapeImageview {
 
     @Override
     public void generatePath(Path path) {
-        int r = Math.min(getWidth() - getPaddingLeft() - getPaddingRight(), getHeight() - getPaddingTop() - getPaddingBottom()) >> 1;
-        path.addCircle((getWidth() - getPaddingLeft() - getPaddingRight()) >> 1,
-                (getHeight() - getPaddingTop() - getPaddingBottom()) >> 1, r, Path.Direction.CW);
+        int realW = getWidth() - getPaddingLeft() - getPaddingRight();
+        int realH = getHeight() - getPaddingTop() - getPaddingBottom();
+        int r = Math.min(realW, realH) >> 1;
+        if (realW >= realH) {
+            path.addCircle(getPaddingLeft() + r + (realW - realH >> 1),
+                    getPaddingTop() + r,
+                    r,
+                    Path.Direction.CW);
+        } else {
+            path.addCircle(getPaddingLeft() + r,
+                    getPaddingTop() + r + (realH - realW >> 1),
+                    r,
+                    Path.Direction.CW);
+        }
+
     }
 }

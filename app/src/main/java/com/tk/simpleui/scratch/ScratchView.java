@@ -31,7 +31,7 @@ public class ScratchView extends View {
 
     private static final PorterDuffXfermode MODE = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
     //70%+触发
-    public static final float ACTIVITY = 0.7f;
+    public static final float ACTIVITY = 0.65f;
     //挂层颜色
     public static final int COVER_COLOR = 0xFFCECECE;
 

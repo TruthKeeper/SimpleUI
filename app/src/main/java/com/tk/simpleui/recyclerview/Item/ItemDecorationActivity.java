@@ -29,13 +29,13 @@ public class ItemDecorationActivity extends AppCompatActivity implements Toolbar
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_item_decoration);
+        setContentView(R.layout.activity_recycler_item);
         initView();
     }
 
     private void initView() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.inflateMenu(R.menu.menu);
+        toolbar.inflateMenu(R.menu.recyclerview_item);
         toolbar.setOnMenuItemClickListener(this);
 
         recyclerview = (RecyclerView) findViewById(R.id.recyclerview);

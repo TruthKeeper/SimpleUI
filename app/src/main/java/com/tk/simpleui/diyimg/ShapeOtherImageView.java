@@ -21,8 +21,10 @@ public class ShapeOtherImageView extends ShapeImageview {
 
     @Override
     public void generatePath(Path path) {
-        RectF rectF = new RectF(getPaddingLeft(), getPaddingTop() + 30,
-                getWidth() - getPaddingRight() - getPaddingLeft(), getBottom() - getPaddingTop() - getPaddingBottom() - 30);
+        RectF rectF = new RectF(getPaddingLeft(),
+                getPaddingTop() + 30,
+                getWidth() - getPaddingRight(),
+                getHeight() - getPaddingBottom() - 30);
         path.addOval(rectF, Path.Direction.CW);
     }
 }

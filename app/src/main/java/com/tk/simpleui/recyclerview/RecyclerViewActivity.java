@@ -44,7 +44,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
         mList.add(new Item("下拉刷新上拉加载_普通青年", new Intent(this, PullNormalActivity.class), true));
         mList.add(new Item("下拉刷新上拉加载_文艺青年", new Intent(this, PullEleganceActivity.class), true));
         mList.add(new Item("下拉刷新上拉加载_中二青年", new Intent(this, PullMagicActivity.class), true));
-        mList.add(new Item("ItemDecoration", new Intent(this, ItemDecorationActivity.class), false));
+        mList.add(new Item("ItemDecoration", new Intent(this, ItemDecorationActivity.class), true));
         mList.add(new Item("ItemAnimator", new Intent(this, AnimActivity.class), false));
         mList.add(new Item("LayoutManager", new Intent(this, LayoutActivity.class), false));
         mList.add(new Item("条目点击", new Intent(this, TouchActivity.class), false));

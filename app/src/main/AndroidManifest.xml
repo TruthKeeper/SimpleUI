@@ -32,8 +32,8 @@
         <activity android:name=".recyclerview.layout.LayoutActivity" />
         <activity android:name=".recyclerview.anim.AnimActivity" />
         <activity android:name=".recyclerview.touch.TouchActivity" />
-        <activity android:name=".videolist.VideoListActivity" />
         <activity android:name=".ratingbar.RatingBarActivity" />
+        <activity android:name=".line.InterestingLineActivity" />
 
     </application>
 

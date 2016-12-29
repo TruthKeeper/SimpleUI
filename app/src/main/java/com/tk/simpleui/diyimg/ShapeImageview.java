@@ -100,6 +100,7 @@ public abstract class ShapeImageview extends ImageView {
         if (drawable == null) {
             return;
         }
+        //还未测量出宽高
         if (getWidth() == 0 && getHeight() == 0) {
             return;
         }
