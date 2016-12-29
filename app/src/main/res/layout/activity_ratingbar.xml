@@ -7,6 +7,12 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="↓SVG↓"
+        android:textSize="16sp" />
+
     <com.tk.simpleui.ratingbar.TRatingbar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,7 +31,7 @@
         app:starEmpty="@drawable/vector_star_off"
         app:starFill="@drawable/vector_star_on"
         app:starImageSize="28dp"
-        app:starPadding="10dp"
+        app:starPadding="16dp"
         app:starRating="1.75"
         app:starSum="3" />
 
@@ -33,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="↓评分↓"
+        android:text="↓png + 评分↓"
         android:textSize="16sp" />
 
     <com.tk.simpleui.ratingbar.TRatingbar
