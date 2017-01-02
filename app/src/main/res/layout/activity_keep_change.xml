@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:background="#cecece"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <com.tk.simpleui.keepchange.KeepChangeLayout
+            android:id="@+id/change_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:drawableSize="24dp"
+            app:leftDrawable="@drawable/vector_decrease"
+            app:rightDrawable="@drawable/vector_increase"
+            app:textColor="#ff8fff"
+            app:textPadding="24dp"
+            app:textSize="18sp"
+            app:textSum="20" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:onClick="confirm"
+            android:text="结算" />
+    </LinearLayout>
+
+</LinearLayout>

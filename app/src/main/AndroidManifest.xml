@@ -34,7 +34,15 @@
         <activity android:name=".recyclerview.touch.TouchActivity" />
         <activity android:name=".ratingbar.RatingBarActivity" />
         <activity android:name=".line.InterestingLineActivity" />
-
+        <activity android:name=".keepchange.KeepChangeActivity" />
+        <activity android:name=".statusbar.StatusBarActivity" />
+        <activity
+            android:name=".statusbar.normal.SolidActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity android:name=".statusbar.normal.TranslucentActivity" />
+        <activity android:name=".statusbar.more.one.OneActivity" />
     </application>
 
 </manifest>

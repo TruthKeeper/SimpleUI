@@ -27,4 +27,22 @@
         <attr name="starFill" format="reference" />
 
     </declare-styleable>
+    <!--KeepChangeLayout-->
+    <declare-styleable name="KeepChangeLayout">
+        <!--左-->
+        <attr name="leftDrawable" format="reference" />
+        <!--右-->
+        <attr name="rightDrawable" format="reference" />
+        <!--drawable大小-->
+        <attr name="drawableSize" format="dimension" />
+        <!--字体大小-->
+        <attr name="textSize" format="dimension" />
+        <!--字体颜色-->
+        <attr name="textColor" format="color" />
+        <!--最大数量限制-->
+        <attr name="textSum" format="integer" />
+        <!--字体左右间距总和-->
+        <attr name="textPadding" format="dimension" />
+
+    </declare-styleable>
 </resources>
