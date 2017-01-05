@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.tk.simpleui.R;
+import com.tk.simpleui.ripple.reveal.RevealActivity;
 import com.tk.simpleui.ripple.reveal.RevealHelper;
 
 public class RippleActivity extends AppCompatActivity implements View.OnClickListener {
@@ -44,7 +45,7 @@ public class RippleActivity extends AppCompatActivity implements View.OnClickLis
                         1000);
                 break;
             case R.id.reveal_3:
-
+                RevealHelper.preCircleReveal(reveal3, RippleActivity.this, RevealActivity.class);
                 break;
         }
     }

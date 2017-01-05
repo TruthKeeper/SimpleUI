@@ -11,6 +11,7 @@ public class RevealActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reveal);
+        RevealHelper.startCircleReveal(this, 1000);
     }
 
 

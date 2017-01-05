@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         mList.add(new Item("Interesting Line", new Intent(this, InterestingLineActivity.class), true));
         mList.add(new Item("购物车递增递减", new Intent(this, KeepChangeActivity.class), true));
         mList.add(new Item("沉浸式方案", new Intent(this, StatusBarActivity.class), true));
-        mList.add(new Item("涟漪动画", new Intent(this, RippleActivity.class), false));
+        mList.add(new Item("涟漪动画", new Intent(this, RippleActivity.class), true));
         mList.add(new Item("One Piece：RecyclerView", new Intent(this, RecyclerViewActivity.class), false));
         mList.add(new Item("Load加载", new Intent(this, LoadActivity.class), false));
         mList.add(new Item("气泡粘连", new Intent(this, BubbleActivity.class), false));
