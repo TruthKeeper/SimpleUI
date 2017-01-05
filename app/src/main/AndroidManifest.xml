@@ -43,6 +43,8 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity android:name=".statusbar.normal.TranslucentActivity" />
         <activity android:name=".statusbar.more.one.OneActivity" />
+        <activity android:name=".statusbar.more.two.TwoActivity" />
+        <activity android:name=".ripple.reveal.RevealActivity" />
     </application>
 
 </manifest>

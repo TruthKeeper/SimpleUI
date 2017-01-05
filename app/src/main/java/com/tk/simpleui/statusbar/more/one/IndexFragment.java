@@ -57,11 +57,9 @@ public class IndexFragment extends Fragment {
     }
 
     public void refreshLayout() {
-        if (tabLayout != null) {
-            int a = (int) (scrollView.getScrollY() * 255f / h);
-            StatusBarHelper.setTranslucentInFragment(getActivity(), tabLayout,
-                    getResources().getColor(R.color.colorPrimary), a > 255 ? 255 : a);
-        }
+        int a = (int) (scrollView.getScrollY() * 255f / h);
+        StatusBarHelper.setTranslucentInFragment(getActivity(), tabLayout,
+                getResources().getColor(R.color.colorPrimary), a > 255 ? 255 : a);
 
     }
 

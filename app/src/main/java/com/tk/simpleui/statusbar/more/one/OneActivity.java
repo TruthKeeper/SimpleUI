@@ -2,10 +2,8 @@ package com.tk.simpleui.statusbar.more.one;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RadioGroup;
 
@@ -24,8 +22,6 @@ public class OneActivity extends AppCompatActivity implements RadioGroup.OnCheck
     private DiscoverFragment discoverFragment;
     private MineFragment mineFragment;
 
-    private Handler handler = new Handler();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +30,11 @@ public class OneActivity extends AppCompatActivity implements RadioGroup.OnCheck
         container = (FrameLayout) findViewById(R.id.container);
         tabGroup = (RadioGroup) findViewById(R.id.tab_group);
 
-        onCheckedChanged(null, R.id.tab_index);
+        indexFragment = new IndexFragment();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.container, indexFragment)
+                .commitAllowingStateLoss();
 
         tabGroup.setOnCheckedChangeListener(this);
     }
@@ -48,13 +48,7 @@ public class OneActivity extends AppCompatActivity implements RadioGroup.OnCheck
                 hide(ft);
                 show(0, ft);
                 ft.commitAllowingStateLoss();
-                View view = findViewById(R.id.tab_layout);
-                if (view == null) {
-                    StatusBarHelper.setTranslucentInFragment(OneActivity.this, findViewById(R.id.tab_layout), 0xff8fff, 0);
-                } else {
-                    indexFragment.refreshLayout();
-                }
-
+                indexFragment.refreshLayout();
                 break;
             case R.id.tab_discover:
                 hide(ft);

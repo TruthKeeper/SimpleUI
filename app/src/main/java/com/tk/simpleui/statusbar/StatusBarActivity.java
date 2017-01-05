@@ -37,8 +37,8 @@ public class StatusBarActivity extends AppCompatActivity {
 
         mList.add(new Item("纯色沉浸式+透明度", new Intent(this, SolidActivity.class), true));
         mList.add(new Item("Translucent半透明模式", new Intent(this, TranslucentActivity.class), true));
-        mList.add(new Item("Fragment_复杂场景1", new Intent(this, OneActivity.class), true));
-//        mList.add(new Item("Fragment_复杂场景2", new Intent(this,. class),true));
+        mList.add(new Item("复杂场景1", new Intent(this, OneActivity.class), true));
+//        mList.add(new Item("复杂场景2", new Intent(this, TwoActivity.class), true));
 
         adapter = new MainAdapter(this, mList);
         recyclerview.setAdapter(adapter);
