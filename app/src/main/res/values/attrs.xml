@@ -45,4 +45,29 @@
         <attr name="textPadding" format="dimension" />
 
     </declare-styleable>
+    <!--查看全文-->
+    <declare-styleable name="ExpandableTextView">
+        <!--显示文本-->
+        <attr name="content" format="string" />
+        <!--文本颜色 default:#000000-->
+        <attr name="contentColor" format="color" />
+        <!--文本大小 default:14sp-->
+        <attr name="contentSize" format="dimension" />
+        <!--文本行间距 default:2dp-->
+        <attr name="lineSpacingExtra" format="dimension" />
+        <!--文本倍距 default:1.0f-->
+        <attr name="lineSpacingMultiplier" format="float" />
+        <!--查看全文 颜色 default:#1e85d4-->
+        <attr name="indicatorTextColor" format="color" />
+        <!--查看全文 大小 default:15sp-->
+        <attr name="indicatorTextSize" format="dimension" />
+        <!--查看全文 上间距  default:6dp-->
+        <attr name="indicatorMarginTop" format="dimension" />
+        <!--查看全文 位置 开始0 中间1 结束2 default:0-->
+        <attr name="indicatorMode" format="integer" />
+        <!--展开动画时间 default:350-->
+        <attr name="during" format="integer" />
+        <!--默认最小显示行数 default:3-->
+        <attr name="minLines" format="integer" />
+    </declare-styleable>
 </resources>

@@ -1,5 +1,6 @@
 package com.tk.simpleui.scratch;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -12,6 +13,7 @@ import android.graphics.PorterDuffXfermode;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 import java.util.concurrent.Callable;
 
@@ -46,6 +48,9 @@ public class ScratchView extends View {
     private boolean isFinish;
     private OnScratchListener onScratchListener;
 
+    private ValueAnimator mAnimator;
+    private int mCoverColor = COVER_COLOR;
+
     public ScratchView(Context context) {
         super(context);
         init();
@@ -65,12 +70,23 @@ public class ScratchView extends View {
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         //优化尖锐拐点
         mPaint.setPathEffect(new CornerPathEffect(4));
+        mAnimator = ValueAnimator.ofFloat(1f, 0f)
+                .setDuration(500);
+        mAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float f = (float) animation.getAnimatedValue();
+                mCoverColor = Color.argb(Math.round(f * 255), Color.red(COVER_COLOR), Color.green(COVER_COLOR), Color.blue(COVER_COLOR));
+                invalidate();
+            }
+        });
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        mPaint.setColor(COVER_COLOR);
+        mPaint.setColor(mCoverColor);
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setXfermode(null);
         canvas.drawRect(0, 0, getWidth(), getHeight(), mPaint);
@@ -84,6 +100,9 @@ public class ScratchView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (isFinish) {
+            return false;
+        }
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mLastX = event.getX();
@@ -159,6 +178,7 @@ public class ScratchView extends View {
                     @Override
                     public void call(Integer integer) {
                         isFinish = true;
+                        mAnimator.start();
                         if (onScratchListener != null) {
                             onScratchListener.onComplete();
                         }
@@ -175,6 +195,8 @@ public class ScratchView extends View {
             mSubscription.unsubscribe();
         }
         mPath.reset();
+        mCoverColor = COVER_COLOR;
+        mPaint.setColor(mCoverColor);
         isFinish = false;
         postInvalidate();
     }

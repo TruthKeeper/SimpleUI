@@ -19,6 +19,7 @@ import com.tk.simpleui.ratingbar.RatingBarActivity;
 import com.tk.simpleui.recyclerview.RecyclerViewActivity;
 import com.tk.simpleui.ripple.RippleActivity;
 import com.tk.simpleui.scratch.ScratchActivity;
+import com.tk.simpleui.expandtext.ExpandTextActivity;
 import com.tk.simpleui.statusbar.StatusBarActivity;
 
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         mList.add(new Item("购物车递增递减", new Intent(this, KeepChangeActivity.class), true));
         mList.add(new Item("沉浸式方案", new Intent(this, StatusBarActivity.class), true));
         mList.add(new Item("涟漪动画", new Intent(this, RippleActivity.class), true));
+        mList.add(new Item("查看全文", new Intent(this, ExpandTextActivity.class), true));
         mList.add(new Item("One Piece：RecyclerView", new Intent(this, RecyclerViewActivity.class), false));
         mList.add(new Item("Load加载", new Intent(this, LoadActivity.class), false));
         mList.add(new Item("气泡粘连", new Intent(this, BubbleActivity.class), false));

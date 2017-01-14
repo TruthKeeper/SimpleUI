@@ -87,7 +87,11 @@ public class CircleRevealLayout extends FrameLayout {
 
     @Override
     protected boolean drawChild(Canvas canvas, View child, long drawingTime) {
-        if (animator != null && animator.isRunning() && child == target) {
+        //遮罩时默认不绘制
+        if (animator == null) {
+            return false;
+        }
+        if (animator.isRunning() && child == target) {
             mPath.reset();
             mPath.addCircle(centerX, centerY, mRevealRadius, Path.Direction.CW);
             canvas.clipPath(mPath);

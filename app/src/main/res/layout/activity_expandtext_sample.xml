@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/splash" />
+
+        <com.tk.simpleui.expandtext.ExpandableTextView
+            android:id="@+id/expand_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            app:content="哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊哦哦哦噢噢哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊哦哦哦噢噢哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦"
+            app:indicatorMode="1"
+            app:minLines="2" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:text="无名氏"
+            android:textSize="14sp" />
+
+        <com.tk.simpleui.expandtext.ExpandableTextView
+            android:id="@+id/expand_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            app:content="胡火火恍按时打算打算打算打打从生产者胡火火恍按时打算打算打算打打从生产者胡火火恍按时打算打算打算打打从生产者胡火火恍按时打算打算打算打打从生产者胡火火恍按时打算打算打算打打从生产者胡火火恍按时打算打算打算打打从生产者胡火火恍按时打算打算打算打打从生产者胡火火恍按时打算打算打算打打从生产者"
+            app:contentColor="@color/colorAccent"
+            app:contentSize="16sp"
+            app:during="200"
+            app:indicatorMarginTop="2dp"
+            app:indicatorMode="2"
+            app:indicatorTextColor="#ff8fff"
+            app:indicatorTextSize="14sp"
+            app:minLines="3" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:text="喵喵喵"
+            android:textSize="14sp" />
+
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="1000dp" />
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

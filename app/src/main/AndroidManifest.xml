@@ -45,6 +45,9 @@
         <activity android:name=".statusbar.more.one.OneActivity" />
         <activity android:name=".statusbar.more.two.TwoActivity" />
         <activity android:name=".ripple.reveal.RevealActivity" />
+        <activity android:name=".expandtext.ExpandTextActivity" />
+        <activity android:name=".expandtext.SampleActivity" />
+        <activity android:name=".expandtext.list.ListActivity" />
     </application>
 
 </manifest>

@@ -13,6 +13,7 @@ public class RippleActivity extends AppCompatActivity implements View.OnClickLis
     private TextView reveal1;
     private TextView reveal2;
     private TextView reveal3;
+    private TextView reveal4;
 
 
     @Override
@@ -23,10 +24,12 @@ public class RippleActivity extends AppCompatActivity implements View.OnClickLis
         reveal1 = (TextView) findViewById(R.id.reveal_1);
         reveal2 = (TextView) findViewById(R.id.reveal_2);
         reveal3 = (TextView) findViewById(R.id.reveal_3);
+        reveal4 = (TextView) findViewById(R.id.reveal_4);
 
         reveal1.setOnClickListener(this);
         reveal2.setOnClickListener(this);
         reveal3.setOnClickListener(this);
+        reveal4.setOnClickListener(this);
     }
 
 
@@ -46,6 +49,12 @@ public class RippleActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.reveal_3:
                 RevealHelper.preCircleReveal(reveal3, RippleActivity.this, RevealActivity.class);
+                break;
+            case R.id.reveal_4:
+                RevealHelper.startCircleReveal(reveal4,
+                        reveal4.getMeasuredWidth() >> 1, 0,
+                        0, (float) Math.hypot(reveal4.getMeasuredWidth() >> 1, reveal4.getMeasuredHeight()),
+                        500);
                 break;
         }
     }

@@ -47,5 +47,49 @@
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="88dp"
+                android:layout_height="88dp"
+                android:background="#cecece"
+                android:gravity="center"
+                android:text="点这里→"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+
+            <com.tk.simpleui.ripple.reveal.CircleRevealLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp">
+
+                <TextView
+                    android:id="@+id/reveal_4"
+                    android:layout_width="88dp"
+                    android:layout_height="88dp"
+                    android:background="#00ee00"
+                    android:gravity="center"
+                    android:text="揭示动画4"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+            </com.tk.simpleui.ripple.reveal.CircleRevealLayout>
+
+            <TextView
+                android:layout_width="88dp"
+                android:layout_height="88dp"
+                android:background="#cecece"
+                android:gravity="center"
+                android:text="←点这里"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+
+        </LinearLayout>
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>
