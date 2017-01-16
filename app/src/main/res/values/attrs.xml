@@ -70,4 +70,23 @@
         <!--默认最小显示行数 default:3-->
         <attr name="minLines" format="integer" />
     </declare-styleable>
+    <declare-styleable name="GesureLockView">
+        <!--行-->
+        <attr name="row" format="integer" />
+        <!--列-->
+        <attr name="column" format="integer" />
+        <!--主要颜色-->
+        <attr name="themeColor" format="color" />
+        <!--错误颜色-->
+        <attr name="failureColor" format="color" />
+        <!--最小几个点-->
+        <attr name="minSize" format="integer" />
+        <!--线粗细单位dp-->
+        <attr name="pathStroke" format="dimension" />
+        <!--错误时的路线顺序-->
+        <attr name="failureGuide" format="boolean" />
+        <!--触摸时时的路线顺序-->
+        <attr name="draggingGuide" format="boolean" />
+
+    </declare-styleable>
 </resources>

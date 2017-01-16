@@ -34,7 +34,7 @@
         <activity android:name=".recyclerview.touch.TouchActivity" />
         <activity android:name=".ratingbar.RatingBarActivity" />
         <activity android:name=".line.InterestingLineActivity" />
-        <activity android:name=".keepchange.KeepChangeActivity" />
+        <activity android:name=".shopcar.ShopCarActivity" />
         <activity android:name=".statusbar.StatusBarActivity" />
         <activity
             android:name=".statusbar.normal.SolidActivity"
@@ -48,6 +48,8 @@
         <activity android:name=".expandtext.ExpandTextActivity" />
         <activity android:name=".expandtext.SampleActivity" />
         <activity android:name=".expandtext.list.ListActivity" />
+        <activity android:name=".gesturelock.OpenLockActivity" />
+        <activity android:name=".gesturelock.SetLockActivity" />
     </application>
 
 </manifest>
