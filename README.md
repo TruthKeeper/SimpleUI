@@ -11,7 +11,7 @@ UI锦集，持续更新中
 | 名称 | 描述 | Demo |
 |-------------|:-------------:| -----:|
 |自定义ImageView|直接在Path上画任意图形的ImageView|![](https://github.com/TruthKeeper/SimpleUI/blob/master/screenshots/diy_imageview.png)|
-|刮奖|顾名思义，TODO刮痕消失动画|![](https://github.com/TruthKeeper/SimpleUI/blob/master/screenshots/scratch.gif)|
+|刮奖|顾名思义|![](https://github.com/TruthKeeper/SimpleUI/blob/master/screenshots/scratch.gif)|
 |流式布局|一行挤不下我就换行，TODO位移动画|![](https://github.com/TruthKeeper/SimpleUI/blob/master/screenshots/flow.gif)|
 |上拉查看详情|模仿淘宝的上拉查看详情|![](https://github.com/TruthKeeper/SimpleUI/blob/master/screenshots/pull_detail.gif) |
 |自定义RatingBar|原生RatingBar不支持设置间距，我可以，TODO补动画|![](https://github.com/TruthKeeper/SimpleUI/blob/master/screenshots/ratingbar.gif)|
@@ -19,3 +19,4 @@ UI锦集，持续更新中
 |购物车长按递增|TODO补动画|![](https://github.com/TruthKeeper/SimpleUI/blob/master/screenshots/keep_change.gif)|
 |沉浸式方案|TODO各类机型，4.4+，DrawerLayout等场景待测试|![](https://github.com/TruthKeeper/SimpleUI/blob/master/screenshots/statusbar.gif)|
 |涟漪动画|兼容揭示动画，TODO其他涟漪效果|![](https://github.com/TruthKeeper/SimpleUI/blob/master/screenshots/ripple.gif)|
+|查看全文|细节有待优化|![](https://github.com/TruthKeeper/SimpleUI/blob/master/screenshots/expand_text.gif)|
