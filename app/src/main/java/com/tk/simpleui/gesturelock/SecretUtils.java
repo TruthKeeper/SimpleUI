@@ -11,11 +11,11 @@ public final class SecretUtils {
     public static String initSecret(int mode) {
         switch (mode) {
             case 0:
-                return "密码：0124678";
+                return "0124678";
             case 1:
-                return "密码：01698";
+                return "01698";
             case 2:
-                return "密码：05107894";
+                return "05107894";
         }
         return null;
     }

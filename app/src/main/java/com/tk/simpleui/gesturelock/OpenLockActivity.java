@@ -58,8 +58,7 @@ public class OpenLockActivity extends AppCompatActivity implements View.OnClickL
 
     private void initSecret() {
         secret = SecretUtils.initSecret(mode);
-        tvPsd.setText(secret);
-
+        tvPsd.setText("密码："+secret);
     }
 
     @Override
