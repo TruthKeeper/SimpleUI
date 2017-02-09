@@ -13,6 +13,7 @@ import com.tk.simpleui.expandtext.ExpandTextActivity;
 import com.tk.simpleui.flod.FlodActivity;
 import com.tk.simpleui.flow.FlowActivity;
 import com.tk.simpleui.gesturelock.OpenLockActivity;
+import com.tk.simpleui.indicator.IndicatorActivity;
 import com.tk.simpleui.line.InterestingLineActivity;
 import com.tk.simpleui.load.LoadActivity;
 import com.tk.simpleui.pulldetail.PullDetailActivity;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         mList.add(new Item("涟漪动画", new Intent(this, RippleActivity.class), true));
         mList.add(new Item("查看全文", new Intent(this, ExpandTextActivity.class), true));
         mList.add(new Item("手势密码", new Intent(this, OpenLockActivity.class), true));
+        mList.add(new Item("添加数字指示器", new Intent(this, IndicatorActivity.class), true));
         mList.add(new Item("One Piece：RecyclerView", new Intent(this, RecyclerViewActivity.class), false));
         mList.add(new Item("Load加载", new Intent(this, LoadActivity.class), false));
         mList.add(new Item("气泡粘连", new Intent(this, BubbleActivity.class), false));

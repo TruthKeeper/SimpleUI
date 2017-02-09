@@ -31,12 +31,18 @@ public abstract class ShapeImageview extends ImageView {
     public ShapeImageview(Context context) {
         super(context);
         super.setScaleType(CENTER_CROP);
+        initPaint();
     }
 
     public ShapeImageview(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        //// TODO: 2016/11/9 项目一般都用这个，别的自行适配哦⁄(⁄ ⁄•⁄ω⁄•⁄ ⁄)⁄
+        this(context, attrs, 0);
+    }
+
+    public ShapeImageview(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        //// TODO: 2016/11/9 几乎只用这个，别的自行适配哦⁄(⁄ ⁄•⁄ω⁄•⁄ ⁄)⁄
         super.setScaleType(CENTER_CROP);
+        initPaint();
     }
 
 
@@ -51,7 +57,6 @@ public abstract class ShapeImageview extends ImageView {
         super.setImageResource(resId);
         refreshUI();
     }
-
 
     @Override
     public void setImageDrawable(Drawable drawable) {
@@ -76,17 +81,8 @@ public abstract class ShapeImageview extends ImageView {
      */
     private void refreshUI() {
         initPaint();
-
         refreshBitmap();
-
-        refreshMatrix();
-
-        mPaint.setShader(mShader);
-        if (mPath == null) {
-            mPath = new Path();
-        } else {
-            mPath.reset();
-        }
+        mPath = new Path();
         //子类实现
         generatePath(mPath);
         invalidate();
@@ -97,17 +93,16 @@ public abstract class ShapeImageview extends ImageView {
      */
     private void refreshBitmap() {
         Drawable drawable = getDrawable();
-        if (drawable == null) {
+        if (drawable == null || (getWidth() == 0 && getHeight() == 0)) {
+            mBitmap = null;
+            mShader = null;
+            mPaint.setShader(null);
             return;
         }
-        //还未测量出宽高
-        if (getWidth() == 0 && getHeight() == 0) {
-            return;
-        }
-
         mBitmap = drawableToBitmap(drawable);
         mShader = new BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
         mPaint.setShader(mShader);
+        refreshMatrix();
     }
 
 
@@ -115,15 +110,15 @@ public abstract class ShapeImageview extends ImageView {
      * 初始化画笔
      */
     private void initPaint() {
-        if (mPaint != null) {
-            return;
+        if (mPaint == null) {
+            mPaint = new Paint();
+            mPaint.setStyle(Paint.Style.FILL);
+            mPaint.setAntiAlias(true);
+            mPaint.setDither(true);
+            mPaint.setColor(Color.WHITE);
         }
-        mPaint = new Paint();
-        mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setAntiAlias(true);
-        mPaint.setDither(true);
-        mPaint.setColor(Color.WHITE);
     }
+
 
     /**
      * 刷新矩阵
@@ -132,9 +127,6 @@ public abstract class ShapeImageview extends ImageView {
      * @return
      */
     private void refreshMatrix() {
-        if (mBitmap == null) {
-            return;
-        }
         Matrix matrix = new Matrix();
         int bitmapW = mBitmap.getWidth();
         int bitmapH = mBitmap.getHeight();
@@ -180,7 +172,7 @@ public abstract class ShapeImageview extends ImageView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if (mPath != null) {
+        if (!mPath.isEmpty()) {
             canvas.drawPath(mPath, mPaint);
         }
     }

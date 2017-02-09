@@ -50,6 +50,7 @@
         <activity android:name=".expandtext.list.ListActivity" />
         <activity android:name=".gesturelock.OpenLockActivity" />
         <activity android:name=".gesturelock.SetLockActivity" />
+        <activity android:name=".indicator.IndicatorActivity"/>
     </application>
 
 </manifest>
