@@ -209,7 +209,7 @@ public class IndicatorView extends View {
             viewGroup.removeView(target);
             parent.addView(target, targetP);
             parent.addView(this, indicatorP);
-            viewGroup.addView(parent, index);
+            viewGroup.addView(parent, index,targetP);
         }
         return this;
     }
