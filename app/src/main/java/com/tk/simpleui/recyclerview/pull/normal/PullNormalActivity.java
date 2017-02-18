@@ -45,7 +45,7 @@ public class PullNormalActivity extends AppCompatActivity implements SwipeRefres
         pullView.setLayoutManager(new LinearLayoutManager(this));
         pullView.setEmptyView(new EmptyLayout(this));
         pullView.setEndView(new EndLayout(this));
-        pullView.refreshComplete();
+        pullView.prepare();
 
         pullView.setOnLoadListener(this);
         swipeLayout.setRefreshing(true);
@@ -63,7 +63,6 @@ public class PullNormalActivity extends AppCompatActivity implements SwipeRefres
                 }
                 swipeLayout.setRefreshing(false);
                 adapter.notifyDataSetChanged();
-                pullView.setLoadResult(true, false);
             }
         }, 2000);
     }
@@ -93,9 +92,9 @@ public class PullNormalActivity extends AppCompatActivity implements SwipeRefres
                     if (r > 0) {
                         mList.add("新数据");
                         adapter.notifyItemRangeInserted(adapter.getItemCount() - 1, 1);
-                        pullView.setLoadResult(true, false);
+                        pullView.setLoadResult(PullableRecyclerView.Status.LOAD_STANDBY);
                     } else {
-                        pullView.setLoadResult(false, false);
+                        pullView.setLoadResult(PullableRecyclerView.Status.LOAD_ERROR);
                     }
                 }
             }, 1000);
@@ -103,7 +102,7 @@ public class PullNormalActivity extends AppCompatActivity implements SwipeRefres
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    pullView.setLoadResult(true, true);
+                    pullView.setLoadResult(PullableRecyclerView.Status.LOAD_END);
                 }
             }, 1000);
         }

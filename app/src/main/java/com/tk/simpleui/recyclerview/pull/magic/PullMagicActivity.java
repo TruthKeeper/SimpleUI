@@ -40,7 +40,7 @@ public class PullMagicActivity extends AppCompatActivity {
         scrollview.setOnScrollListener(new MagicNestedScrollView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(MagicNestedScrollView view, int scrollState) {
-                pullView.applyNestScrollState(scrollState);
+                pullView.applyInNesting(scrollState);
             }
 
             @Override
@@ -53,7 +53,7 @@ public class PullMagicActivity extends AppCompatActivity {
         pullView.setLayoutManager(new LinearLayoutManager(this));
         pullView.setEmptyView(new EmptyLayout(this));
         pullView.setEndView(new EndLayout(this));
-        pullView.refreshComplete();
+        pullView.prepare();
         pullView.setNestedScrollingEnabled(false);
         pullView.setOnLoadListener(new PullableRecyclerView.OnLoadListener() {
             @Override
@@ -63,7 +63,7 @@ public class PullMagicActivity extends AppCompatActivity {
                     public void run() {
                         mList.add("新数据");
                         adapter.notifyItemRangeInserted(adapter.getItemCount() - 1, 1);
-                        pullView.setLoadResult(true, false);
+                        pullView.setLoadResult(PullableRecyclerView.Status.LOAD_STANDBY);
                         pullView.requestLayout();
                     }
                 }, 1000);
@@ -83,7 +83,7 @@ public class PullMagicActivity extends AppCompatActivity {
                 }
                 dialog.dismiss();
                 adapter.notifyDataSetChanged();
-                pullView.setLoadResult(true, false);
+                pullView.setLoadResult(PullableRecyclerView.Status.LOAD_STANDBY);
             }
         }, 2000);
 

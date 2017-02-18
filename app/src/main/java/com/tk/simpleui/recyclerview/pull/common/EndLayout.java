@@ -37,7 +37,7 @@ public class EndLayout extends LinearLayout implements IEnd {
     }
 
     @Override
-    public void onInit() {
+    public void onShow() {
         pull_progressbar.setVisibility(VISIBLE);
         pull_tip.setText("卖力加载中");
     }
