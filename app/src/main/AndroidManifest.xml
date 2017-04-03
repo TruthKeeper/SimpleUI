@@ -24,14 +24,7 @@
         <activity android:name=".drag.DragActivity" />
         <activity android:name=".ripple.RippleActivity" />
         <activity android:name=".flod.FlodActivity" />
-        <activity android:name=".recyclerview.RecyclerViewActivity" />
-        <activity android:name=".recyclerview.pull.normal.PullNormalActivity" />
-        <activity android:name=".recyclerview.pull.elegance.PullEleganceActivity" />
-        <activity android:name=".recyclerview.pull.magic.PullMagicActivity" />
-        <activity android:name=".recyclerview.Item.ItemDecorationActivity" />
-        <activity android:name=".recyclerview.layout.LayoutActivity" />
-        <activity android:name=".recyclerview.anim.AnimActivity" />
-        <activity android:name=".recyclerview.touch.TouchActivity" />
+
         <activity android:name=".ratingbar.RatingBarActivity" />
         <activity android:name=".line.InterestingLineActivity" />
         <activity android:name=".shopcar.ShopCarActivity" />

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.ColorInt;
+import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +26,7 @@ public class StatusBarHelper {
      * @param activity
      * @param color
      */
-    public static void setStatusBarColor(Activity activity, @ColorInt int color) {
+    public static void setStatusBarColor(@NonNull Activity activity, @ColorInt int color) {
         setStatusBarColor(activity, color, 255);
     }
 
@@ -36,7 +38,7 @@ public class StatusBarHelper {
      * @param statusBarAlpha
      */
 
-    public static void setStatusBarColor(Activity activity, @ColorInt int color, int statusBarAlpha) {
+    public static void setStatusBarColor(@NonNull Activity activity, @ColorInt int color, @IntRange(from = 0, to = 255) int statusBarAlpha) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             //5.0+
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -56,7 +58,7 @@ public class StatusBarHelper {
      *
      * @param activity
      */
-    public static void setTranslucent(Activity activity, @ColorInt int color) {
+    public static void setTranslucent(@NonNull Activity activity, @ColorInt int color) {
         setTranslucent(activity, color, 0);
     }
 
@@ -66,7 +68,7 @@ public class StatusBarHelper {
      * @param activity
      * @param statusBarAlpha
      */
-    public static void setTranslucent(Activity activity, @ColorInt int color, int statusBarAlpha) {
+    public static void setTranslucent(@NonNull Activity activity, @ColorInt int color, @IntRange(from = 0, to = 255) int statusBarAlpha) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             //5.0+
             activity.getWindow().setStatusBarColor(calculateNewColor(color, statusBarAlpha));
@@ -86,7 +88,8 @@ public class StatusBarHelper {
      * @param activity
      * @param statusBarAlpha
      */
-    public static void setTranslucentInFragment(final Activity activity, final View needOffsetView, final @ColorInt int color, final int statusBarAlpha) {
+    public static void setTranslucentInFragment(@NonNull final Activity activity, @NonNull final View needOffsetView,
+                                                final @ColorInt int color, @IntRange(from = 0, to = 255) final int statusBarAlpha) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             return;
         }
@@ -95,9 +98,7 @@ public class StatusBarHelper {
             @Override
             public void run() {
                 setTranslucent(activity, color, statusBarAlpha);
-                if (needOffsetView != null) {
-                    ((ViewGroup.MarginLayoutParams) needOffsetView.getLayoutParams()).topMargin = getStatusBarHeight(activity);
-                }
+                ((ViewGroup.MarginLayoutParams) needOffsetView.getLayoutParams()).topMargin = getStatusBarHeight(activity);
             }
         });
 
@@ -111,7 +112,7 @@ public class StatusBarHelper {
      * @param fragment
      * @param color
      */
-    public static void setStatusBarColorInFragment(Activity activity, Fragment fragment, @ColorInt int color) {
+    public static void setStatusBarColorInFragment(@NonNull Activity activity, @NonNull Fragment fragment, @ColorInt int color) {
         setStatusBarColorInFragment(activity, fragment, color, 255);
     }
 
@@ -124,7 +125,8 @@ public class StatusBarHelper {
      * @param color
      * @param statusBarAlpha
      */
-    public static void setStatusBarColorInFragment(final Activity activity, final Fragment fragment, final @ColorInt int color, final int statusBarAlpha) {
+    public static void setStatusBarColorInFragment(@NonNull final Activity activity, @NonNull final Fragment fragment,
+                                                   final @ColorInt int color, @IntRange(from = 0, to = 255) final int statusBarAlpha) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             return;
         }
@@ -209,7 +211,7 @@ public class StatusBarHelper {
      * @param context
      * @return
      */
-    public static int getStatusBarHeight(Context context) {
+    public static int getStatusBarHeight(@NonNull Context context) {
         int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
         return context.getResources().getDimensionPixelSize(resourceId);
     }
@@ -221,7 +223,7 @@ public class StatusBarHelper {
      * @param alpha
      * @return
      */
-    public static int calculateNewColor(@ColorInt int color, int alpha) {
+    public static int calculateNewColor(@ColorInt int color, @IntRange(from = 0, to = 255) int alpha) {
         return Color.argb(alpha, Color.red(color), Color.green(color), Color.blue(color));
     }
 }
