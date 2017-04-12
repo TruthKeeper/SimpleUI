@@ -44,7 +44,6 @@
         <activity android:name=".gesturelock.OpenLockActivity" />
         <activity android:name=".gesturelock.SetLockActivity" />
         <activity android:name=".indicator.IndicatorActivity"/>
-        <activity android:name=".viewremover.ViewRemoverActivity"/>
     </application>
 
 </manifest>
