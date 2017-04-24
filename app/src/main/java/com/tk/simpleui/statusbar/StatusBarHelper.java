@@ -8,6 +8,7 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -53,11 +54,55 @@ public class StatusBarHelper {
         }
     }
 
+    /**
+     * <pre>
+     *     适用于根布局为DrawerLayout
+     *     设置状态栏颜色，默认纯色
+     * <pre/>
+     * @param activity
+     * @param drawerLayout
+     * @param color
+     */
+    public static void setStatusBarColorInDrawer(@NonNull Activity activity,
+                                                 @NonNull DrawerLayout drawerLayout,
+                                                 @ColorInt int color) {
+        setStatusBarColorInDrawer(activity, drawerLayout, color, 255);
+    }
+
+    /**
+     * <pre>
+     *     适用于根布局为DrawerLayout
+     *     设置状态栏颜色，默认纯色
+     * <pre/>
+     * @param activity
+     * @param drawerLayout
+     * @param color
+     * @param statusBarAlpha
+     */
+    public static void setStatusBarColorInDrawer(@NonNull Activity activity,
+                                                 @NonNull DrawerLayout drawerLayout,
+                                                 @ColorInt int color,
+                                                 @IntRange(from = 0, to = 255) int statusBarAlpha) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            //5.0+
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            activity.getWindow().setStatusBarColor(calculateNewColor(color, statusBarAlpha));
+            setDrawerFit(drawerLayout);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            //4.4.+
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            fitFakeView(activity, color, statusBarAlpha);
+            ((ViewGroup.MarginLayoutParams) drawerLayout.getLayoutParams()).topMargin = getStatusBarHeight(activity);
+            setDrawerFit(drawerLayout);
+        }
+    }
+
 
     /**
      * 使状态栏半透明，默认完全透明
-     *
      * @param activity
+     * @param color
      */
     public static void setTranslucent(@NonNull Activity activity, @ColorInt int color) {
         setTranslucent(activity, color, 0);
@@ -65,8 +110,8 @@ public class StatusBarHelper {
 
     /**
      * 使状态栏半透明
-     *
      * @param activity
+     * @param color
      * @param statusBarAlpha
      */
     public static void setTranslucent(@NonNull Activity activity,
@@ -82,6 +127,47 @@ public class StatusBarHelper {
             activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             fitFakeView(activity, color, statusBarAlpha);
             setRootViewFit(activity, false);
+        }
+    }
+
+    /**
+     * <pre>
+     *     适用于根布局为DrawerLayout
+     *     使状态栏半透明，默认完全透明
+     * <pre/>
+     * @param activity
+     * @param drawerLayout
+     * @param color
+     */
+    public static void setTranslucentInDrawer(@NonNull Activity activity, @NonNull DrawerLayout drawerLayout, @ColorInt int color) {
+        setTranslucentInDrawer(activity, drawerLayout, color, 0);
+    }
+
+    /**
+     * <pre>
+     *     适用于根布局为DrawerLayout
+     *     使状态栏半透明，默认完全透明
+     * <pre/>
+     * @param activity
+     * @param drawerLayout
+     * @param color
+     * @param statusBarAlpha
+     */
+    public static void setTranslucentInDrawer(@NonNull Activity activity,
+                                              @NonNull DrawerLayout drawerLayout,
+                                              @ColorInt int color,
+                                              @IntRange(from = 0, to = 255) int statusBarAlpha) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            //5.0+
+            activity.getWindow().setStatusBarColor(calculateNewColor(color, statusBarAlpha));
+            activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            setRootViewFit(activity, false);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            //4.4+
+            activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            fitFakeView(activity, color, statusBarAlpha);
+//            setRootViewFit(activity, false);
+            setDrawerFit(drawerLayout);
         }
     }
 
@@ -178,6 +264,17 @@ public class StatusBarHelper {
         }
     }
 
+    /**
+     * 适配DrawerLayout
+     *
+     * @param drawerLayout
+     */
+    private static void setDrawerFit(DrawerLayout drawerLayout) {
+        drawerLayout.setFitsSystemWindows(false);
+        drawerLayout.getChildAt(0).setFitsSystemWindows(false);
+        ((ViewGroup) drawerLayout.getChildAt(0)).setClipToPadding(true);
+        drawerLayout.getChildAt(1).setFitsSystemWindows(false);
+    }
 
     /**
      * 设置根布局相关参数

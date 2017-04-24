@@ -1,4 +1,4 @@
-package com.tk.simpleui.statusbar.more.one;
+package com.tk.simpleui.statusbar.more.fragment;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;

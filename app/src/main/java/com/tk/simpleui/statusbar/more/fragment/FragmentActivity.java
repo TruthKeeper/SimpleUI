@@ -1,4 +1,4 @@
-package com.tk.simpleui.statusbar.more.one;
+package com.tk.simpleui.statusbar.more.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,7 +13,7 @@ import com.tk.simpleui.statusbar.StatusBarHelper;
  * Created by TK on 2017/1/2.
  */
 
-public class OneActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
+public class FragmentActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
     private RadioGroup tabGroup;
 
     private IndexFragment indexFragment;
@@ -23,7 +23,7 @@ public class OneActivity extends AppCompatActivity implements RadioGroup.OnCheck
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_statusbar_one_main);
+        setContentView(R.layout.activity_statusbar_fragment);
         StatusBarHelper.setTranslucent(this, Color.WHITE);
         tabGroup = (RadioGroup) findViewById(R.id.tab_group);
 

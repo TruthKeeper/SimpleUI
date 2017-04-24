@@ -35,8 +35,9 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity android:name=".statusbar.normal.TranslucentActivity" />
-        <activity android:name=".statusbar.more.one.OneActivity" />
-        <activity android:name=".statusbar.more.two.TwoActivity" />
+        <activity android:name=".statusbar.more.fragment.FragmentActivity" />
+        <activity android:name=".statusbar.more.drawerlayout.DrawerOneActivity" />
+        <activity android:name=".statusbar.more.drawerlayout.DrawerTwoActivity" />
         <activity android:name=".ripple.reveal.RevealActivity" />
         <activity android:name=".expandtext.ExpandTextActivity" />
         <activity android:name=".expandtext.SampleActivity" />
