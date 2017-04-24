@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.FrameLayout;
 import android.widget.RadioGroup;
 
 import com.tk.simpleui.R;
@@ -15,7 +14,6 @@ import com.tk.simpleui.statusbar.StatusBarHelper;
  */
 
 public class OneActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
-    private FrameLayout container;
     private RadioGroup tabGroup;
 
     private IndexFragment indexFragment;
@@ -27,7 +25,6 @@ public class OneActivity extends AppCompatActivity implements RadioGroup.OnCheck
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statusbar_one_main);
         StatusBarHelper.setTranslucent(this, Color.WHITE);
-        container = (FrameLayout) findViewById(R.id.container);
         tabGroup = (RadioGroup) findViewById(R.id.tab_group);
 
         indexFragment = new IndexFragment();
@@ -48,19 +45,24 @@ public class OneActivity extends AppCompatActivity implements RadioGroup.OnCheck
                 hide(ft);
                 show(0, ft);
                 ft.commitAllowingStateLoss();
+                getSupportFragmentManager().executePendingTransactions();
+
                 indexFragment.refreshLayout();
                 break;
             case R.id.tab_discover:
                 hide(ft);
                 show(1, ft);
                 ft.commitAllowingStateLoss();
-                StatusBarHelper.setStatusBarColorInFragment(this, discoverFragment, getResources().getColor(R.color.colorPrimary));
+                getSupportFragmentManager().executePendingTransactions();
 
+                StatusBarHelper.setStatusBarColorInFragment(this, discoverFragment, getResources().getColor(R.color.colorPrimary));
                 break;
             case R.id.tab_mine:
                 hide(ft);
                 show(2, ft);
                 ft.commitAllowingStateLoss();
+                getSupportFragmentManager().executePendingTransactions();
+
                 StatusBarHelper.setStatusBarColorInFragment(this, mineFragment, 0xff6262);
                 break;
         }

@@ -37,8 +37,9 @@ public class StatusBarHelper {
      * @param color
      * @param statusBarAlpha
      */
-
-    public static void setStatusBarColor(@NonNull Activity activity, @ColorInt int color, @IntRange(from = 0, to = 255) int statusBarAlpha) {
+    public static void setStatusBarColor(@NonNull Activity activity,
+                                         @ColorInt int color,
+                                         @IntRange(from = 0, to = 255) int statusBarAlpha) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             //5.0+
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -48,7 +49,7 @@ public class StatusBarHelper {
             //4.4.+
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             fitFakeView(activity, color, statusBarAlpha);
-            setRootView(activity);
+            setRootViewFit(activity, true);
         }
     }
 
@@ -68,28 +69,32 @@ public class StatusBarHelper {
      * @param activity
      * @param statusBarAlpha
      */
-    public static void setTranslucent(@NonNull Activity activity, @ColorInt int color, @IntRange(from = 0, to = 255) int statusBarAlpha) {
+    public static void setTranslucent(@NonNull Activity activity,
+                                      @ColorInt int color,
+                                      @IntRange(from = 0, to = 255) int statusBarAlpha) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             //5.0+
             activity.getWindow().setStatusBarColor(calculateNewColor(color, statusBarAlpha));
-            activity.getWindow().getDecorView()
-                    .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            setRootViewFit(activity, false);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             //4.4+
             activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             fitFakeView(activity, color, statusBarAlpha);
+            setRootViewFit(activity, false);
         }
     }
 
     /**
      * 使状态栏半透明，标题View向下偏移
-     * 与setStatusBarColorInFragment配合食用
      *
      * @param activity
      * @param statusBarAlpha
      */
-    public static void setTranslucentInFragment(@NonNull final Activity activity, @NonNull final View needOffsetView,
-                                                final @ColorInt int color, @IntRange(from = 0, to = 255) final int statusBarAlpha) {
+    public static void setTranslucentOffset(@NonNull final Activity activity,
+                                            @NonNull final View needOffsetView,
+                                            @ColorInt final int color,
+                                            @IntRange(from = 0, to = 255) final int statusBarAlpha) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             return;
         }
@@ -106,7 +111,6 @@ public class StatusBarHelper {
 
     /**
      * Fragment中设置状态栏颜色，默认纯色
-     * 与setTranslucentInFragment配合食用
      *
      * @param activity
      * @param fragment
@@ -118,15 +122,16 @@ public class StatusBarHelper {
 
     /**
      * Fragment中设置状态栏颜色
-     * 与setTranslucentInFragment配合食用
      *
      * @param activity
      * @param fragment
      * @param color
      * @param statusBarAlpha
      */
-    public static void setStatusBarColorInFragment(@NonNull final Activity activity, @NonNull final Fragment fragment,
-                                                   final @ColorInt int color, @IntRange(from = 0, to = 255) final int statusBarAlpha) {
+    public static void setStatusBarColorInFragment(@NonNull final Activity activity,
+                                                   @NonNull final Fragment fragment,
+                                                   @ColorInt final int color,
+                                                   @IntRange(from = 0, to = 255) final int statusBarAlpha) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             return;
         }
@@ -140,7 +145,9 @@ public class StatusBarHelper {
             contentView.post(new Runnable() {
                 @Override
                 public void run() {
-                    fragment.getView().setPadding(0, getStatusBarHeight(activity), 0, 0);
+                    if (fragment.getView() != null) {
+                        fragment.getView().setPadding(0, getStatusBarHeight(activity), 0, 0);
+                    }
                 }
             });
         }
@@ -148,7 +155,7 @@ public class StatusBarHelper {
 
 
     /**
-     * 自适应FakeView
+     * 添加一个自适应FakeView
      *
      * @param activity
      * @param color
@@ -177,14 +184,18 @@ public class StatusBarHelper {
      *
      * @param activity
      */
-    private static void setRootView(Activity activity) {
+    private static void setRootViewFit(Activity activity, boolean fitsSystemWindow) {
         ViewGroup parent = (ViewGroup) activity.findViewById(android.R.id.content);
         int count = parent.getChildCount();
         for (int i = 0; i < count; i++) {
             View childView = parent.getChildAt(i);
             if (childView instanceof ViewGroup) {
-                childView.setFitsSystemWindows(true);
-                ((ViewGroup) childView).setClipToPadding(true);
+                if (fitsSystemWindow) {
+                    childView.setFitsSystemWindows(true);
+                    ((ViewGroup) childView).setClipToPadding(true);
+                } else {
+                    childView.setFitsSystemWindows(false);
+                }
             }
         }
     }

@@ -1,10 +1,11 @@
 package com.tk.simpleui.statusbar.more.one;
 
-import android.animation.ArgbEvaluator;
+import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,50 +24,54 @@ public class IndexFragment extends Fragment {
     private LinearLayout tabLayout;
     private NestedScrollView scrollView;
 
-    private ArgbEvaluator evaluator;
-    private int h;
+    private int height;
+    private int colorPrimary;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        colorPrimary = ContextCompat.getColor(context, R.color.colorPrimary);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_more_one_index, null);
         initView(view);
-
         return view;
     }
 
     private void initView(View view) {
-        evaluator = new ArgbEvaluator();
-        h = DensityUtil.dp2px(getContext(), 200);
+        height = DensityUtil.dp2px(getContext(), 200);
 
         scrollView = (NestedScrollView) view.findViewById(R.id.scrollView);
         tabLayout = (LinearLayout) view.findViewById(R.id.tab_layout);
         scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                int color = getResources().getColor(R.color.colorPrimary);
-                if (scrollY >= h && ((ColorDrawable) tabLayout.getBackground()).getColor() != color) {
-                    StatusBarHelper.setTranslucentInFragment(getActivity(), tabLayout, color, 255);
-                    tabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                } else if (scrollY < h) {
-                    StatusBarHelper.setTranslucentInFragment(getActivity(),
-                            tabLayout, color, (int) (scrollY * 255f / h));
-                    tabLayout.setBackgroundColor(StatusBarHelper.calculateNewColor(color, (int) (scrollY * 255f / h)));
+                if (scrollY >= height && ((ColorDrawable) tabLayout.getBackground()).getColor() != colorPrimary) {
+                    StatusBarHelper.setTranslucentOffset(getActivity(), tabLayout, colorPrimary, 255);
+                    tabLayout.setBackgroundColor(colorPrimary);
+                } else if (scrollY < height) {
+                    int alpha = (int) (scrollY * 255f / height);
+                    StatusBarHelper.setTranslucentOffset(getActivity(),
+                            tabLayout, colorPrimary, alpha);
+                    tabLayout.setBackgroundColor(StatusBarHelper.calculateNewColor(colorPrimary, alpha));
                 }
             }
         });
     }
 
     public void refreshLayout() {
-        int a = (int) (scrollView.getScrollY() * 255f / h);
-        StatusBarHelper.setTranslucentInFragment(getActivity(), tabLayout,
-                getResources().getColor(R.color.colorPrimary), a > 255 ? 255 : a);
+        int alpha = (int) (scrollView.getScrollY() * 255f / height);
+        StatusBarHelper.setTranslucentOffset(getActivity(), tabLayout,
+                getResources().getColor(R.color.colorPrimary), alpha > 255 ? 255 : alpha);
 
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        StatusBarHelper.setTranslucentInFragment(getActivity(), tabLayout, getResources().getColor(R.color.colorPrimary), 0);
+        StatusBarHelper.setTranslucentOffset(getActivity(), tabLayout, colorPrimary, 0);
     }
 
 }
