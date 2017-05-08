@@ -1,6 +1,7 @@
 package com.tk.simpleui.pulldetail;
 
 import android.content.Context;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -59,11 +60,11 @@ public class PullDetailLayout extends ViewGroup {
                 mLastY = event.getY();
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (scrollToBottom(scrollViews[0])) {
+                if (!ViewCompat.canScrollVertically(scrollViews[0], 1)) {
                     //Top滑到底了
                     if (event.getY() - mLastY < 0) {
                         //上拉手势
-                        if (scrollToTop(scrollViews[1])) {
+                        if (!ViewCompat.canScrollVertically(scrollViews[1], -1)) {
                             //Bottom滑到顶了
                             if (getScrollY() >= scrollViews[0].getMeasuredHeight()) {
                                 //Bottom完全可见
@@ -79,7 +80,8 @@ public class PullDetailLayout extends ViewGroup {
                         if (getScrollY() <= 0) {
                             return false;
                         } else if (getScrollY() >= scrollViews[0].getMeasuredHeight()) {
-                            if (scrollToTop(scrollViews[1])) {
+                            if (!ViewCompat.canScrollVertically(scrollViews[1], -1)) {
+                                //Bottom滑到顶了
                                 return true;
                             } else {
                                 return false;
@@ -158,14 +160,6 @@ public class PullDetailLayout extends ViewGroup {
             scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
             invalidate();
         }
-    }
-
-    private boolean scrollToTop(View view) {
-        return view.getScrollY() <= 0;
-    }
-
-    private boolean scrollToBottom(ViewGroup viewGroup) {
-        return viewGroup.getScrollY() >= (viewGroup.getChildAt(0).getHeight() - viewGroup.getMeasuredHeight());
     }
 
     @Override
