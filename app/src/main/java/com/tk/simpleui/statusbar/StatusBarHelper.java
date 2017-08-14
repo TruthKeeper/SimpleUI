@@ -8,9 +8,11 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
@@ -20,6 +22,7 @@ import android.widget.LinearLayout;
  */
 
 public class StatusBarHelper {
+    public static final int TAG_OFFSET_VIEW = -233;
 
     /**
      * 设置状态栏颜色，默认纯色
@@ -101,6 +104,7 @@ public class StatusBarHelper {
 
     /**
      * 使状态栏半透明，默认完全透明
+     *
      * @param activity
      * @param color
      */
@@ -110,6 +114,7 @@ public class StatusBarHelper {
 
     /**
      * 使状态栏半透明
+     *
      * @param activity
      * @param color
      * @param statusBarAlpha
@@ -139,7 +144,9 @@ public class StatusBarHelper {
      * @param drawerLayout
      * @param color
      */
-    public static void setTranslucentInDrawer(@NonNull Activity activity, @NonNull DrawerLayout drawerLayout, @ColorInt int color) {
+    public static void setTranslucentInDrawer(@NonNull Activity activity,
+                                              @NonNull DrawerLayout drawerLayout,
+                                              @ColorInt int color) {
         setTranslucentInDrawer(activity, drawerLayout, color, 0);
     }
 
@@ -166,7 +173,7 @@ public class StatusBarHelper {
             //4.4+
             activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             fitFakeView(activity, color, statusBarAlpha);
-//            setRootViewFit(activity, false);
+            setRootViewFit(activity, false);
             setDrawerFit(drawerLayout);
         }
     }
@@ -178,21 +185,22 @@ public class StatusBarHelper {
      * @param statusBarAlpha
      */
     public static void setTranslucentOffset(@NonNull final Activity activity,
-                                            @NonNull final View needOffsetView,
+                                            @NonNull final View offsetView,
                                             @ColorInt final int color,
                                             @IntRange(from = 0, to = 255) final int statusBarAlpha) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             return;
         }
-        //Post来无缝切换
-        activity.findViewById(android.R.id.content).post(new Runnable() {
-            @Override
-            public void run() {
-                setTranslucent(activity, color, statusBarAlpha);
-                ((ViewGroup.MarginLayoutParams) needOffsetView.getLayoutParams()).topMargin = getStatusBarHeight(activity);
-            }
-        });
-
+        setTranslucent(activity, color, statusBarAlpha);
+        Object tag = offsetView.getTag(TAG_OFFSET_VIEW);
+        if (tag != null && tag instanceof Boolean && (Boolean) tag) {
+            return;
+        }
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) offsetView.getLayoutParams();
+        params.setMargins(params.leftMargin, params.topMargin + getStatusBarHeight(activity),
+                params.rightMargin, params.bottomMargin);
+        offsetView.setLayoutParams(params);
+        offsetView.setTag(TAG_OFFSET_VIEW, true);
     }
 
     /**
@@ -222,10 +230,10 @@ public class StatusBarHelper {
             return;
         }
         setStatusBarColor(activity, color, statusBarAlpha);
-        ViewGroup contentView = (ViewGroup) activity.findViewById(android.R.id.content);
+        ViewGroup contentView = (ViewGroup) activity.findViewById(Window.ID_ANDROID_CONTENT);
         contentView.setPadding(0, 0, 0, 0);
         //设置头部偏移
-        if (fragment.getView() != null) {
+        if (null != fragment.getView()) {
             fragment.getView().setPadding(0, getStatusBarHeight(activity), 0, 0);
         } else {
             contentView.post(new Runnable() {
@@ -249,17 +257,22 @@ public class StatusBarHelper {
      */
     private static void fitFakeView(Activity activity, @ColorInt int color, int statusBarAlpha) {
         ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
-        if (decorView != null) {
+        if (null != decorView) {
             int count = decorView.getChildCount();
+            View fakeView;
             for (int i = 0; i < count; i++) {
                 if (decorView.getChildAt(i) instanceof FakeView) {
                     //refresh
-                    decorView.getChildAt(i).setBackgroundColor(calculateNewColor(color, statusBarAlpha));
+                    fakeView = decorView.getChildAt(i);
+                    if (fakeView.getVisibility() == View.GONE) {
+                        fakeView.setVisibility(View.VISIBLE);
+                    }
+                    fakeView.setBackgroundColor(calculateNewColor(color, statusBarAlpha));
                     return;
                 }
             }
             //add
-            FakeView fakeView = generateFakeView(activity, color, statusBarAlpha);
+            fakeView = generateFakeView(activity, color, statusBarAlpha);
             decorView.addView(fakeView);
         }
     }
@@ -272,7 +285,6 @@ public class StatusBarHelper {
     private static void setDrawerFit(DrawerLayout drawerLayout) {
         drawerLayout.setFitsSystemWindows(false);
         drawerLayout.getChildAt(0).setFitsSystemWindows(false);
-        ((ViewGroup) drawerLayout.getChildAt(0)).setClipToPadding(true);
         drawerLayout.getChildAt(1).setFitsSystemWindows(false);
     }
 
@@ -282,19 +294,8 @@ public class StatusBarHelper {
      * @param activity
      */
     private static void setRootViewFit(Activity activity, boolean fitsSystemWindow) {
-        ViewGroup parent = (ViewGroup) activity.findViewById(android.R.id.content);
-        int count = parent.getChildCount();
-        for (int i = 0; i < count; i++) {
-            View childView = parent.getChildAt(i);
-            if (childView instanceof ViewGroup) {
-                if (fitsSystemWindow) {
-                    childView.setFitsSystemWindows(true);
-                    ((ViewGroup) childView).setClipToPadding(true);
-                } else {
-                    childView.setFitsSystemWindows(false);
-                }
-            }
-        }
+        ViewGroup rootView = (ViewGroup) ((ViewGroup) activity.findViewById(Window.ID_ANDROID_CONTENT)).getChildAt(0);
+        ViewCompat.setFitsSystemWindows(rootView, fitsSystemWindow);
     }
 
     /**

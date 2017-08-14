@@ -3,6 +3,7 @@ package com.tk.simpleui.statusbar.more.fragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.RadioGroup;
 
@@ -55,7 +56,7 @@ public class FragmentActivity extends AppCompatActivity implements RadioGroup.On
                 ft.commitAllowingStateLoss();
                 getSupportFragmentManager().executePendingTransactions();
 
-                StatusBarHelper.setStatusBarColorInFragment(this, discoverFragment, getResources().getColor(R.color.colorPrimary));
+                StatusBarHelper.setStatusBarColorInFragment(this, discoverFragment, ContextCompat.getColor(this, R.color.colorPrimary));
                 break;
             case R.id.tab_mine:
                 hide(ft);

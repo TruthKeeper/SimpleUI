@@ -63,8 +63,10 @@ public class IndexFragment extends Fragment {
 
     public void refreshLayout() {
         int alpha = (int) (scrollView.getScrollY() * 255f / height);
-        StatusBarHelper.setTranslucentOffset(getActivity(), tabLayout,
-                getResources().getColor(R.color.colorPrimary), alpha > 255 ? 255 : alpha);
+        StatusBarHelper.setTranslucentOffset(getActivity(),
+                tabLayout,
+                ContextCompat.getColor(getContext(), R.color.colorPrimary),
+                alpha > 255 ? 255 : alpha);
 
     }
 
