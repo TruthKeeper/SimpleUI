@@ -57,12 +57,12 @@ public class ExpandableTextView extends LinearLayout {
         if (attrs != null) {
             TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.ExpandableTextView);
             contentView.setTextColor(array.getColor(R.styleable.ExpandableTextView_contentColor, Color.BLACK));
-            contentView.setTextSize(TypedValue.COMPLEX_UNIT_PX, array.getDimension(R.styleable.ExpandableTextView_contentSize, DensityUtil.sp2px(context, 14)));
+            contentView.setTextSize(TypedValue.COMPLEX_UNIT_PX, array.getDimension(R.styleable.ExpandableTextView_contentSize, DensityUtil.sp2px(14)));
             lineSpacingExtra = array.getDimensionPixelOffset(R.styleable.ExpandableTextView_lineSpacingExtra, lineSpacingExtra);
             lineSpacingMultiplier = array.getFloat(R.styleable.ExpandableTextView_lineSpacingMultiplier, lineSpacingMultiplier);
             contentView.setLineSpacing(lineSpacingExtra, lineSpacingMultiplier);
             indicatorView.setTextColor(array.getColor(R.styleable.ExpandableTextView_indicatorTextColor, 0xFF1E85D4));
-            indicatorView.setTextSize(TypedValue.COMPLEX_UNIT_PX, array.getDimension(R.styleable.ExpandableTextView_indicatorTextSize, DensityUtil.sp2px(context, 15)));
+            indicatorView.setTextSize(TypedValue.COMPLEX_UNIT_PX, array.getDimension(R.styleable.ExpandableTextView_indicatorTextSize, DensityUtil.sp2px(15)));
             int mode = array.getInt(R.styleable.ExpandableTextView_indicatorMode, 0);
             switch (mode) {
                 case 1:
@@ -72,7 +72,7 @@ public class ExpandableTextView extends LinearLayout {
                     ((LayoutParams) indicatorView.getLayoutParams()).gravity = Gravity.END;
                     break;
             }
-            int marginTop = array.getDimensionPixelOffset(R.styleable.ExpandableTextView_indicatorMarginTop, DensityUtil.dp2px(context, 6));
+            int marginTop = array.getDimensionPixelOffset(R.styleable.ExpandableTextView_indicatorMarginTop, DensityUtil.dp2px(6));
             ((LayoutParams) indicatorView.getLayoutParams()).topMargin = marginTop;
             during = array.getInt(R.styleable.ExpandableTextView_during, during);
             minLines = array.getInt(R.styleable.ExpandableTextView_minLines, minLines);
@@ -129,7 +129,7 @@ public class ExpandableTextView extends LinearLayout {
     }
 
     private void init() {
-        lineSpacingExtra = DensityUtil.dp2px(getContext(), 3);
+        lineSpacingExtra = DensityUtil.dp2px(3);
         lineSpacingMultiplier = 1f;
         LayoutInflater.from(getContext()).inflate(R.layout.expandable_textview_layout, this);
         setOrientation(VERTICAL);

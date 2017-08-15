@@ -58,14 +58,14 @@ public class IndicatorActivity extends AppCompatActivity {
     private void refresh() {
         IndicatorFactory.with(this)
                 .gravity(Gravity.END | Gravity.TOP)
-                .size(DensityUtil.dp2px(this, 12))
+                .size(DensityUtil.dp2px(12))
                 .shape(IndicatorView.Shape.POINT)
                 .text(msg)
                 .build()
                 .bind(iv1);
         IndicatorFactory.with(this)
                 .gravity(Gravity.END | Gravity.TOP)
-                .size(DensityUtil.dp2px(this, 18))
+                .size(DensityUtil.dp2px(18))
                 .shape(IndicatorView.Shape.CIRCLE)
                 .backgroundColor(0xff1e85d4)
                 .text(msg)
@@ -73,7 +73,7 @@ public class IndicatorActivity extends AppCompatActivity {
                 .bind(iv2);
         IndicatorFactory.with(this)
                 .gravity(Gravity.END | Gravity.TOP)
-                .size(DensityUtil.dp2px(this, 18))
+                .size(DensityUtil.dp2px(18))
                 .textSize(14)
                 .shape(IndicatorView.Shape.RECT)
                 .textColor(Color.BLACK)
@@ -83,7 +83,7 @@ public class IndicatorActivity extends AppCompatActivity {
                 .bind(iv3);
         IndicatorFactory.with(this)
                 .gravity(Gravity.END | Gravity.TOP)
-                .size(DensityUtil.dp2px(this, 18))
+                .size(DensityUtil.dp2px(18))
                 .shape(IndicatorView.Shape.ROUND_RECT)
                 .text(msg)
                 .needPlus(false)
@@ -91,8 +91,8 @@ public class IndicatorActivity extends AppCompatActivity {
                 .bind(iv4);
         IndicatorFactory.with(this)
                 .gravity(Gravity.START | Gravity.BOTTOM)
-                .size(DensityUtil.dp2px(this, 18))
-                .bottomMargin(DensityUtil.dp2px(this, 6))
+                .size(DensityUtil.dp2px(18))
+                .bottomMargin(DensityUtil.dp2px(6))
                 .shape(IndicatorView.Shape.CIRCLE)
                 .text(msg)
                 .needPlus(false)

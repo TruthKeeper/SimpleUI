@@ -67,7 +67,7 @@ public class TRatingbar extends View {
             mStarSize = array.getDimensionPixelOffset(R.styleable.TRatingbar_starImageSize, ViewGroup.LayoutParams.WRAP_CONTENT);
             mStarRating = array.getFloat(R.styleable.TRatingbar_starRating, STAR_RATING);
             mStarSum = array.getInteger(R.styleable.TRatingbar_starSum, STAR_SUM);
-            mStarPadding = array.getDimensionPixelOffset(R.styleable.TRatingbar_starPadding, DensityUtil.dp2px(getContext(), DEFAULT_PADDING));
+            mStarPadding = array.getDimensionPixelOffset(R.styleable.TRatingbar_starPadding, DensityUtil.dp2px(DEFAULT_PADDING));
             mStarEmptyDrawable = array.getDrawable(R.styleable.TRatingbar_starEmpty);
             mStarFillDrawable = array.getDrawable(R.styleable.TRatingbar_starFill);
             //是否允许点击评分

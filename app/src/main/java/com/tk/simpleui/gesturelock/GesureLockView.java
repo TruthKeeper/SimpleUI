@@ -85,7 +85,7 @@ public class GesureLockView extends ViewGroup {
 
     public GesureLockView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        int stroke = DensityUtil.dp2px(context, PATH_STROKE);
+        int stroke = DensityUtil.dp2px(PATH_STROKE);
         if (attrs != null) {
             TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.GesureLockView);
             mRow = array.getInt(R.styleable.GesureLockView_row, ROW);
@@ -116,7 +116,7 @@ public class GesureLockView extends ViewGroup {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int defaultSize = DensityUtil.dp2px(getContext(), DEFAULT_SIZE);
+        int defaultSize = DensityUtil.dp2px(DEFAULT_SIZE);
         setMeasuredDimension(measureWidth(widthMeasureSpec, defaultSize),
                 measureHeight(heightMeasureSpec, defaultSize));
     }

@@ -41,7 +41,7 @@ public class IndexFragment extends Fragment {
     }
 
     private void initView(View view) {
-        height = DensityUtil.dp2px(getContext(), 200);
+        height = DensityUtil.dp2px(200);
 
         scrollView = (NestedScrollView) view.findViewById(R.id.scrollView);
         tabLayout = (LinearLayout) view.findViewById(R.id.tab_layout);

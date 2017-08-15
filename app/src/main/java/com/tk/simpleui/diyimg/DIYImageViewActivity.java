@@ -35,7 +35,7 @@ public class DIYImageViewActivity extends AppCompatActivity {
             roundL.setOutlineProvider(new ViewOutlineProvider() {
                 @Override
                 public void getOutline(View view, Outline outline) {
-                    int round = DensityUtil.dp2px(DIYImageViewActivity.this, 6);
+                    int round = DensityUtil.dp2px(6);
                     if (Build.VERSION.SDK_INT >= LOLLIPOP) {
                         outline.setRoundRect(0, 0, roundL.getMeasuredWidth(), roundL.getMeasuredHeight(), round);
                     }

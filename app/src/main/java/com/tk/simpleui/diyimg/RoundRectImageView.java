@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -13,7 +14,7 @@ import com.tk.simpleui.common.DensityUtil;
  * Created by TK on 2016/11/8.
  */
 
-public class RoundRectImageView extends ImageView {
+public class RoundRectImageView extends AppCompatImageView {
     private Path mPath = new Path();
 
     public RoundRectImageView(Context context) {
@@ -45,7 +46,7 @@ public class RoundRectImageView extends ImageView {
                 getPaddingTop(),
                 w - getPaddingLeft() - getPaddingRight(),
                 h - getPaddingTop() - getPaddingBottom());
-        int round = DensityUtil.dp2px(getContext(), 6);
+        int round = DensityUtil.dp2px(6);
         mPath.addRoundRect(r, new float[]{round, round, round, round, round, round, round, round}, Path.Direction.CW);
     }
 }

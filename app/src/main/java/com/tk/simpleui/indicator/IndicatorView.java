@@ -102,7 +102,7 @@ public class IndicatorView extends View {
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setTextAlign(Paint.Align.CENTER);
-        mPaint.setTextSize(DensityUtil.sp2px(getContext(), textSize));
+        mPaint.setTextSize(DensityUtil.sp2px(textSize));
 
         Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
         textHeight = fontMetrics.bottom + fontMetrics.top;
@@ -135,7 +135,7 @@ public class IndicatorView extends View {
                 canvas.drawText(s, getWidth() / 2f, (getHeight() - textHeight) / 2f, mPaint);
             }
         } else if (shape == Shape.ROUND_RECT) {
-            int r = DensityUtil.dp2px(getContext(), ROUND);
+            int r = DensityUtil.dp2px(ROUND);
             canvas.drawRoundRect(content, r, r, mPaint);
 
             String s = calculText(text);
@@ -176,7 +176,7 @@ public class IndicatorView extends View {
             //已经偷梁换柱
             IndicatorView indicatorView = (IndicatorView) ((IndicatorFrameLayout) target.getParent()).getChildAt(1);
             FrameLayout.LayoutParams p = new FrameLayout.LayoutParams(
-                    shape == Shape.POINT ? size : w > size ? w + DensityUtil.dp2px(getContext(), PADDING) : size, size);
+                    shape == Shape.POINT ? size : w > size ? w + DensityUtil.dp2px(PADDING) : size, size);
 
             p.leftMargin = leftMargin;
             p.topMargin = topMargin;
@@ -185,7 +185,7 @@ public class IndicatorView extends View {
             p.gravity = gravity;
             indicatorView.backgroundColor = backgroundColor;
             indicatorView.textSize = textSize;
-            indicatorView.mPaint.setTextSize(DensityUtil.sp2px(getContext(), textSize));
+            indicatorView.mPaint.setTextSize(DensityUtil.sp2px(textSize));
             indicatorView.textColor = textColor;
             indicatorView.text = text;
             indicatorView.plus = plus;
@@ -196,7 +196,7 @@ public class IndicatorView extends View {
             ViewGroup viewGroup = (ViewGroup) target.getParent();
             ViewGroup.LayoutParams targetP = target.getLayoutParams();
             FrameLayout.LayoutParams indicatorP = new FrameLayout.LayoutParams(
-                    shape == Shape.POINT ? size : w > size ? w + DensityUtil.dp2px(getContext(), PADDING) : size, size);
+                    shape == Shape.POINT ? size : w > size ? w + DensityUtil.dp2px(PADDING) : size, size);
 
             indicatorP.leftMargin = leftMargin;
             indicatorP.topMargin = topMargin;
@@ -209,7 +209,7 @@ public class IndicatorView extends View {
             viewGroup.removeView(target);
             parent.addView(target, targetP);
             parent.addView(this, indicatorP);
-            viewGroup.addView(parent, index,targetP);
+            viewGroup.addView(parent, index, targetP);
         }
         return this;
     }
