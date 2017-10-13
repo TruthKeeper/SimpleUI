@@ -22,6 +22,7 @@ import com.tk.simpleui.ripple.RippleActivity;
 import com.tk.simpleui.scratch.ScratchActivity;
 import com.tk.simpleui.shopcar.ShopCarActivity;
 import com.tk.simpleui.statusbar.StatusBarActivity;
+import com.tk.simpleui.swipe.SwipeActivity;
 import com.tk.simpleui.triangledialog.TriangleDialogActivity;
 
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         mList.add(new Item("手势密码", new Intent(this, OpenLockActivity.class), true));
         mList.add(new Item("添加数字指示器", new Intent(this, IndicatorActivity.class), true));
         mList.add(new Item("箭头Dialog", new Intent(this, TriangleDialogActivity.class), true));
+        mList.add(new Item("侧滑布局", new Intent(this, SwipeActivity.class), true));
         //RecyclerView过于沉重，搬家至  https://github.com/TruthKeeper/RecyclerViewDesign
 //        mList.add(new Item("One Piece：RecyclerView", new Intent(this, RecyclerViewActivity.class), false));
         mList.add(new Item("Load加载", new Intent(this, LoadActivity.class), false));

@@ -44,8 +44,12 @@
         <activity android:name=".expandtext.list.ListActivity" />
         <activity android:name=".gesturelock.OpenLockActivity" />
         <activity android:name=".gesturelock.SetLockActivity" />
-        <activity android:name=".indicator.IndicatorActivity"/>
-        <activity android:name=".triangledialog.TriangleDialogActivity"/>
+        <activity android:name=".indicator.IndicatorActivity" />
+        <activity android:name=".triangledialog.TriangleDialogActivity" />
+        <activity android:name=".swipe.SwipeActivity" />
+        <activity android:name=".swipe.SwipeSampleActivity" />
+        <activity android:name=".swipe.SwipeListActivity" />
+        <activity android:name=".swipe.SwipeViewPagerActivity" />
     </application>
 
 </manifest>
