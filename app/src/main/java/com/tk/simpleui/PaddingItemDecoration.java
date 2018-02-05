@@ -28,10 +28,10 @@ public class PaddingItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     public PaddingItemDecoration(Context mContext, int paddingLeft, int paddingRight, int color, int divier) {
-        this.paddingLeft = DensityUtil.dp2px(mContext, paddingLeft);
-        this.paddingRight = DensityUtil.dp2px(mContext, paddingRight);
+        this.paddingLeft = DensityUtil.dp2px(paddingLeft);
+        this.paddingRight = DensityUtil.dp2px(paddingRight);
         this.mDrawable = new ColorDrawable(color);
-        this.divider = DensityUtil.dp2px(mContext, divier);
+        this.divider = DensityUtil.dp2px(divier);
     }
 
     @Override

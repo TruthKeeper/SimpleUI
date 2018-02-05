@@ -63,7 +63,7 @@ public class IndicatorView extends View {
         point = builder.point;
         radius = builder.radius;
 
-        mPaint.setTextSize(DensityUtil.sp2px(getContext(), textSize));
+        mPaint.setTextSize(DensityUtil.sp2px(  textSize));
 
         Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
         textHeight = fontMetrics.bottom + fontMetrics.top;
@@ -120,7 +120,7 @@ public class IndicatorView extends View {
             return null;
         }
         Paint paint = new Paint();
-        paint.setTextSize(DensityUtil.sp2px(target.getContext(), builder.textSize));
+        paint.setTextSize(DensityUtil.sp2px(builder.textSize));
         int width = Math.round(paint.measureText(convertText(builder.num, builder.upper)));
         IndicatorView indicatorView;
         if (target.getParent() instanceof IndicatorFrameLayout) {
@@ -183,7 +183,7 @@ public class IndicatorView extends View {
     }
 
     public static final class Builder {
-        private int size = DensityUtil.dp2px(Utils.getApp(), 6);
+        private int size = DensityUtil.dp2px(  6);
         private int leftMargin = 0;
         private int topMargin = 0;
         private int bottomMargin = 0;
@@ -196,7 +196,7 @@ public class IndicatorView extends View {
         /**
          * 圆角矩形时的左、右间距
          */
-        private int padding = DensityUtil.dp2px(Utils.getApp(), 2);
+        private int padding = DensityUtil.dp2px(  2);
         private float textSize = 12F;
         private int textColor = Color.WHITE;
         private int num = 0;

@@ -27,7 +27,7 @@ public class ShapeRoundImageView extends ShapeImageview {
                 getPaddingTop(),
                 getWidth() - getPaddingRight(),
                 getHeight() - getPaddingBottom());
-        int round = DensityUtil.dp2px(getContext(), 6);
+        int round = DensityUtil.dp2px(6);
         path.addRoundRect(r, new float[]{round, round, round, round, round, round, round, round}, Path.Direction.CW);
     }
 }

@@ -9,6 +9,7 @@
         <!--触发阈值0f-1f-->
         <attr name="activity" format="float" />
     </declare-styleable>
+
     <!--TRatingBar-->
     <declare-styleable name="TRatingbar">
         <!--星星大小，正方形-->
@@ -25,8 +26,8 @@
         <attr name="starEmpty" format="reference" />
         <!--高亮-->
         <attr name="starFill" format="reference" />
-
     </declare-styleable>
+
     <!--KeepChangeLayout-->
     <declare-styleable name="KeepChangeLayout">
         <!--左-->
@@ -43,8 +44,8 @@
         <attr name="textSum" format="integer" />
         <!--字体左右间距总和-->
         <attr name="textPadding" format="dimension" />
-
     </declare-styleable>
+
     <!--查看全文-->
     <declare-styleable name="ExpandableTextView">
         <!--显示文本-->
@@ -70,6 +71,7 @@
         <!--默认最小显示行数 default:3-->
         <attr name="minLines" format="integer" />
     </declare-styleable>
+    <!--手势解锁-->
     <declare-styleable name="GesureLockView">
         <!--行-->
         <attr name="row" format="integer" />
@@ -87,6 +89,20 @@
         <attr name="failureGuide" format="boolean" />
         <!--触摸时时的路线顺序-->
         <attr name="draggingGuide" format="boolean" />
-
+    </declare-styleable>
+    <!--侧滑布局-->
+    <declare-styleable name="SwipeLayout">
+        <!--侧滑布局位置-->
+        <attr name="sl_position" format="enum">
+            <enum name="left" value="0" />
+            <enum name="top" value="1" />
+            <enum name="right" value="2" />
+            <enum name="bottom" value="3" />
+        </attr>
+        <!--侧滑模式，默认pull-->
+        <attr name="sl_mode" format="enum">
+            <enum name="pull" value="0" />
+            <enum name="layer" value="1" />
+        </attr>
     </declare-styleable>
 </resources>
