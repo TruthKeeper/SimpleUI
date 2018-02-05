@@ -21,7 +21,7 @@ import com.tk.simpleui.ratingbar.RatingBarActivity;
 import com.tk.simpleui.ripple.RippleActivity;
 import com.tk.simpleui.scratch.ScratchActivity;
 import com.tk.simpleui.shopcar.ShopCarActivity;
-import com.tk.simpleui.statusbar.StatusBarActivity;
+import com.tk.simpleui.bar.StatusBarActivity;
 
 import java.util.ArrayList;
 import java.util.List;

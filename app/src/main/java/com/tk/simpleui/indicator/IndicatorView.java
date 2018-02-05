@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.tk.simpleui.Utils;
 import com.tk.simpleui.common.DensityUtil;
 
 
@@ -24,51 +26,23 @@ import com.tk.simpleui.common.DensityUtil;
 
 public class IndicatorView extends View {
     private static final String TAG = "IndicatorView";
-    /**
-     * 圆角4dp
-     */
-    public static final int ROUND = 4;
-    /**
-     * 字数过长增加4dp间距
-     */
-    public static final int PADDING = 4;
-
-    public enum Shape {
-        /**
-         * 小点
-         */
-        POINT,
-        /**
-         * 圆，字数过长是变为椭圆
-         */
-        CIRCLE,
-        /**
-         * 矩形
-         */
-        RECT,
-        /**
-         * 圆角矩形
-         */
-        ROUND_RECT
-    }
 
     private Paint mPaint = new Paint();
     //Build
-    private int size = 0x20;
-    private int leftMargin = 0;
-    private int topMargin = 0;
-    private int bottomMargin = 0;
-    private int rightMargin = 0;
-    private int backgroundColor = Color.RED;
-    private float textSize = 12f;
-    private int textColor = Color.WHITE;
-    private int text = 0;
-    private int gravity = Gravity.END | Gravity.TOP;
-    private boolean plus = true;
-    private Shape shape = Shape.POINT;
+    private int backgroundColor;
+    private int radius;
+    private float textSize;
+    private int textColor;
+    private int num;
+    private boolean upper;
+    private boolean point;
     private float textHeight;
 
     private RectF content;
+
+    public static Builder with() {
+        return new Builder();
+    }
 
     public IndicatorView(Context context) {
         super(context);
@@ -80,20 +54,19 @@ public class IndicatorView extends View {
         init();
     }
 
-    private IndicatorView(Builder builder) {
-        this(builder.context);
-        size = builder.size;
-        leftMargin = builder.leftMargin;
-        topMargin = builder.topMargin;
-        rightMargin = builder.rightMargin;
-        bottomMargin = builder.bottomMargin;
+    private void initBuilder(Builder builder) {
         backgroundColor = builder.backgroundColor;
         textColor = builder.textColor;
         textSize = builder.textSize;
-        text = builder.text;
-        gravity = builder.gravity;
-        plus = builder.plus;
-        shape = builder.shape;
+        num = builder.num;
+        upper = builder.upper;
+        point = builder.point;
+        radius = builder.radius;
+
+        mPaint.setTextSize(DensityUtil.sp2px(getContext(), textSize));
+
+        Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
+        textHeight = fontMetrics.bottom + fontMetrics.top;
     }
 
     private void init() {
@@ -102,116 +75,92 @@ public class IndicatorView extends View {
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setTextAlign(Paint.Align.CENTER);
-        mPaint.setTextSize(DensityUtil.sp2px(getContext(), textSize));
-
-        Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
-        textHeight = fontMetrics.bottom + fontMetrics.top;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (text <= 0) {
+        if (num <= 0) {
             return;
         }
         mPaint.setColor(backgroundColor);
-        if (shape == Shape.POINT) {
-            canvas.drawCircle(size / 2f, size / 2f, size / 2f, mPaint);
-        } else if (shape == Shape.CIRCLE) {
+        if (point) {
+            canvas.drawCircle(getWidth() >> 1, getHeight() >> 1, getHeight() >> 1, mPaint);
+        } else {
+            canvas.drawRoundRect(content, radius, radius, mPaint);
 
-            canvas.drawOval(content, mPaint);
-
-            String s = calculText(text);
-            if (!TextUtils.isEmpty(s)) {
+            String numStr = convertText(num, upper);
+            if (!TextUtils.isEmpty(numStr)) {
                 mPaint.setColor(textColor);
-                canvas.drawText(s, getWidth() / 2f, (getHeight() - textHeight) / 2f, mPaint);
-            }
-        } else if (shape == Shape.RECT) {
-            canvas.drawRect(0, 0, getWidth(), getHeight(), mPaint);
-
-            String s = calculText(text);
-            if (!TextUtils.isEmpty(s)) {
-                mPaint.setColor(textColor);
-                canvas.drawText(s, getWidth() / 2f, (getHeight() - textHeight) / 2f, mPaint);
-            }
-        } else if (shape == Shape.ROUND_RECT) {
-            int r = DensityUtil.dp2px(getContext(), ROUND);
-            canvas.drawRoundRect(content, r, r, mPaint);
-
-            String s = calculText(text);
-            if (!TextUtils.isEmpty(s)) {
-                mPaint.setColor(textColor);
-                canvas.drawText(s, getWidth() / 2f, (getHeight() - textHeight) / 2f, mPaint);
+                canvas.drawText(numStr, getWidth() / 2F, (getHeight() - textHeight) / 2F, mPaint);
             }
         }
-
     }
 
-
-    private String calculText(int text) {
-        if (text <= 0) {
+    private static String convertText(int num, boolean upper) {
+        if (num <= 0) {
             return "";
         }
-        if (plus && text > 99) {
+        if (upper && num > 99) {
             return "99+";
         }
-        return Integer.toString(text);
+        return Integer.toString(num);
     }
 
     /**
      * 绑定
-     * 偷梁换柱，添加一层FrameLayout
      *
+     * @param builder
      * @param target
+     * @return
      */
-    public IndicatorView bind(View target) {
+    private static IndicatorView bind(@NonNull Builder builder, @NonNull View target) {
         if (target.getParent() == null) {
             Log.e(TAG, "target need parent!");
             return null;
         }
-        String s = calculText(text);
-        int w = Math.round(mPaint.measureText(s));
-
+        Paint paint = new Paint();
+        paint.setTextSize(DensityUtil.sp2px(target.getContext(), builder.textSize));
+        int width = Math.round(paint.measureText(convertText(builder.num, builder.upper)));
+        IndicatorView indicatorView;
         if (target.getParent() instanceof IndicatorFrameLayout) {
             //已经偷梁换柱
-            IndicatorView indicatorView = (IndicatorView) ((IndicatorFrameLayout) target.getParent()).getChildAt(1);
-            FrameLayout.LayoutParams p = new FrameLayout.LayoutParams(
-                    shape == Shape.POINT ? size : w > size ? w + DensityUtil.dp2px(getContext(), PADDING) : size, size);
+            indicatorView = (IndicatorView) ((IndicatorFrameLayout) target.getParent()).getChildAt(((IndicatorFrameLayout) target.getParent()).getChildCount() - 1);
+            FrameLayout.LayoutParams indicatorP = new FrameLayout.LayoutParams(
+                    builder.point ? builder.size : Math.max(width + 2 * builder.padding, builder.size),
+                    builder.size);
 
-            p.leftMargin = leftMargin;
-            p.topMargin = topMargin;
-            p.rightMargin = rightMargin;
-            p.bottomMargin = bottomMargin;
-            p.gravity = gravity;
-            indicatorView.backgroundColor = backgroundColor;
-            indicatorView.textSize = textSize;
-            indicatorView.mPaint.setTextSize(DensityUtil.sp2px(getContext(), textSize));
-            indicatorView.textColor = textColor;
-            indicatorView.text = text;
-            indicatorView.plus = plus;
-            indicatorView.shape = shape;
-            indicatorView.setLayoutParams(p);
+            indicatorP.leftMargin = builder.leftMargin;
+            indicatorP.topMargin = builder.topMargin;
+            indicatorP.rightMargin = builder.rightMargin;
+            indicatorP.bottomMargin = builder.bottomMargin;
+            indicatorP.gravity = builder.gravity;
+            indicatorView.initBuilder(builder);
+            indicatorView.setLayoutParams(indicatorP);
             indicatorView.invalidate();
         } else {
+            indicatorView = new IndicatorView(target.getContext());
             ViewGroup viewGroup = (ViewGroup) target.getParent();
             ViewGroup.LayoutParams targetP = target.getLayoutParams();
             FrameLayout.LayoutParams indicatorP = new FrameLayout.LayoutParams(
-                    shape == Shape.POINT ? size : w > size ? w + DensityUtil.dp2px(getContext(), PADDING) : size, size);
+                    builder.point ? builder.size : Math.max(width + 2 * builder.padding, builder.size),
+                    builder.size);
 
-            indicatorP.leftMargin = leftMargin;
-            indicatorP.topMargin = topMargin;
-            indicatorP.rightMargin = rightMargin;
-            indicatorP.bottomMargin = bottomMargin;
-            indicatorP.gravity = gravity;
+            indicatorP.leftMargin = builder.leftMargin;
+            indicatorP.topMargin = builder.topMargin;
+            indicatorP.rightMargin = builder.rightMargin;
+            indicatorP.bottomMargin = builder.bottomMargin;
+            indicatorP.gravity = builder.gravity;
+            indicatorView.initBuilder(builder);
 
             IndicatorFrameLayout parent = new IndicatorFrameLayout(target.getContext());
             int index = viewGroup.indexOfChild(target);
             viewGroup.removeView(target);
             parent.addView(target, targetP);
-            parent.addView(this, indicatorP);
-            viewGroup.addView(parent, index,targetP);
+            parent.addView(indicatorView, indicatorP);
+            viewGroup.addView(parent, index, targetP);
         }
-        return this;
+        return indicatorView;
     }
 
     /**
@@ -234,23 +183,30 @@ public class IndicatorView extends View {
     }
 
     public static final class Builder {
-        private Context context;
-        private int size = 0x20;
+        private int size = DensityUtil.dp2px(Utils.getApp(), 6);
         private int leftMargin = 0;
         private int topMargin = 0;
         private int bottomMargin = 0;
         private int rightMargin = 0;
         private int backgroundColor = Color.RED;
-        private float textSize = 12f;
+        /**
+         * 圆角矩形时的圆角
+         */
+        private int radius = 0;
+        /**
+         * 圆角矩形时的左、右间距
+         */
+        private int padding = DensityUtil.dp2px(Utils.getApp(), 2);
+        private float textSize = 12F;
         private int textColor = Color.WHITE;
-        private int text = 0;
+        private int num = 0;
         private int gravity = Gravity.END | Gravity.TOP;
-        private boolean plus = true;
-        private Shape shape = Shape.POINT;
+        private boolean upper = true;
+        /**
+         * true：小圆点 false：圆角矩形(显示数字)
+         */
+        private boolean point = false;
 
-        public Builder(Context context) {
-            this.context = context;
-        }
 
         /**
          * 设置大小，设置成高度，宽度自动调节
@@ -279,7 +235,7 @@ public class IndicatorView extends View {
         }
 
         /**
-         * 在BindView的相对位置
+         * 相对位置
          *
          * @param gravity
          * @return
@@ -292,11 +248,11 @@ public class IndicatorView extends View {
         /**
          * 数字
          *
-         * @param text
+         * @param num
          * @return
          */
-        public Builder text(int text) {
-            this.text = text;
+        public Builder num(int num) {
+            this.num = num;
             return this;
         }
 
@@ -305,6 +261,12 @@ public class IndicatorView extends View {
             return this;
         }
 
+        /**
+         * 字体大小
+         *
+         * @param textSize 单位 : sp
+         * @return
+         */
         public Builder textSize(float textSize) {
             this.textSize = textSize;
             return this;
@@ -323,27 +285,67 @@ public class IndicatorView extends View {
         /**
          * 超过99是否显示99+
          *
-         * @param plus
+         * @param upper
          * @return
          */
-        public Builder needPlus(boolean plus) {
-            this.plus = plus;
+        public Builder upper(boolean upper) {
+            this.upper = upper;
             return this;
         }
 
         /**
          * 设置形状
          *
-         * @param shape
+         * @param point
          * @return
          */
-        public Builder shape(Shape shape) {
-            this.shape = shape;
+        public Builder point(boolean point) {
+            this.point = point;
             return this;
         }
 
-        public IndicatorView build() {
-            return new IndicatorView(this);
+        /**
+         * 圆角矩形时的圆角
+         *
+         * @param radius
+         * @return
+         */
+        public Builder radius(int radius) {
+            this.radius = radius;
+            return this;
+        }
+
+        /**
+         * 圆角矩形时的左、右间距
+         *
+         * @param padding
+         * @return
+         */
+        public Builder padding(int padding) {
+            this.padding = padding;
+            return this;
+        }
+
+        /**
+         * 绑定
+         *
+         * @param view
+         * @return
+         */
+        public void bind(@NonNull View view) {
+            if (!point) {
+                radius = Math.min(size >> 1, radius);
+            }
+            IndicatorView.bind(this, view);
+        }
+    }
+
+    /**
+     * 偷梁换柱的容器
+     */
+    public static class IndicatorFrameLayout extends FrameLayout {
+        public IndicatorFrameLayout(Context context) {
+            super(context);
         }
     }
 }
