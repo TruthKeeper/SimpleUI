@@ -5,22 +5,15 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
-import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
-import static com.tk.simpleui.triangledialog.dialog.TriangleDialog.Mode.LEFT;
-import static com.tk.simpleui.triangledialog.dialog.TriangleDialog.Mode.TOP;
-import static com.tk.simpleui.triangledialog.dialog.TriangleDialog.Mode.RIGHT;
-import static com.tk.simpleui.triangledialog.dialog.TriangleDialog.Mode.BOTTOM;
-
-
 /**
  * <pre>
  *      author : TK
- *      time : 2017/8/15
+ *      time : 2018/3/30
  *      desc :
  * </pre>
  */
@@ -28,15 +21,16 @@ import static com.tk.simpleui.triangledialog.dialog.TriangleDialog.Mode.BOTTOM;
 public class TriangleContainer extends FrameLayout {
     private Paint mPaint = new Paint();
     private Path mPath = new Path();
-    @TriangleDialog.Mode
-    private int mMode;
-    private int round;
+
+    private int radius;
+    @TriangleDialog.Direction
+    private int direction;
+
     private int triangleWidth;
     private int triangleHeight;
-    /**
-     * 三角偏移量，>0向右，向下
-     */
-    private int off;
+    private int containerOffset;
+
+    private int shadowRadius;
 
     public TriangleContainer(@NonNull Context context) {
         this(context, null);
@@ -46,7 +40,7 @@ public class TriangleContainer extends FrameLayout {
         this(context, attrs, 0);
     }
 
-    public TriangleContainer(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
+    public TriangleContainer(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setLayerType(LAYER_TYPE_SOFTWARE, null);
         mPaint.setDither(true);
@@ -55,71 +49,99 @@ public class TriangleContainer extends FrameLayout {
 
     }
 
+    public void prepare(int paddingLeft,
+                        int paddingTop,
+                        int paddingRight,
+                        int paddingBottom,
+                        int radius,
+                        @TriangleDialog.Direction int direction,
+                        int triangleWidth, int triangleHeight,
+                        int containerOffset, int containerColor,
+                        int shadowRadius, int shadowColor) {
+
+        this.radius = radius;
+        this.direction = direction;
+        this.triangleWidth = triangleWidth;
+        this.triangleHeight = triangleHeight;
+        this.containerOffset = containerOffset;
+        this.shadowRadius = shadowRadius;
+
+        mPaint.setColor(containerColor);
+        if (shadowRadius > 0) {
+            mPaint.setShadowLayer(shadowRadius, 0, 0, shadowColor);
+        }
+        switch (direction) {
+            case TriangleDialog.Direction.BOTTOM:
+                setPadding(shadowRadius + paddingLeft,
+                        shadowRadius + paddingTop,
+                        shadowRadius + paddingRight,
+                        shadowRadius + paddingBottom + triangleHeight);
+                break;
+            case TriangleDialog.Direction.LEFT:
+                setPadding(shadowRadius + paddingLeft + triangleHeight,
+                        shadowRadius + paddingTop,
+                        shadowRadius + paddingRight,
+                        shadowRadius + paddingBottom);
+                break;
+            case TriangleDialog.Direction.RIGHT:
+                setPadding(shadowRadius + paddingLeft,
+                        shadowRadius + paddingTop,
+                        shadowRadius + paddingRight + triangleHeight,
+                        shadowRadius + paddingBottom);
+                break;
+            case TriangleDialog.Direction.TOP:
+                setPadding(shadowRadius + paddingLeft,
+                        shadowRadius + paddingTop + triangleHeight,
+                        shadowRadius + paddingRight,
+                        shadowRadius + paddingBottom);
+                break;
+        }
+    }
+
     @Override
     protected void dispatchDraw(Canvas canvas) {
         canvas.drawPath(mPath, mPaint);
+        canvas.clipPath(mPath);
         super.dispatchDraw(canvas);
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
+        containerOffset = Math.min(containerOffset, w - shadowRadius * 2 - radius * 2 - triangleWidth);
         mPath.reset();
-        RectF rectF = new RectF(0, 0, w, h);
-        switch (mMode) {
-            case LEFT:
-                rectF.left = rectF.left + triangleHeight;
-                mPath.moveTo(triangleHeight, round + off);
-                mPath.rLineTo(0, triangleWidth);
-                mPath.rLineTo(-triangleHeight, -triangleWidth >> 1);
-                mPath.close();
-                break;
-            case TOP:
-                rectF.top = rectF.top + triangleHeight;
-                mPath.moveTo(round + off, triangleHeight);
-                mPath.rLineTo(triangleWidth, 0);
-                mPath.rLineTo(-triangleWidth >> 1, -triangleHeight);
-                mPath.close();
-                break;
-            case RIGHT:
-                rectF.right = rectF.right - triangleHeight;
-                mPath.moveTo(w - triangleHeight, round + off);
-                mPath.rLineTo(0, triangleWidth);
-                mPath.rLineTo(triangleHeight, -triangleWidth >> 1);
-                mPath.close();
-                break;
-            case BOTTOM:
-                rectF.bottom = rectF.bottom - triangleHeight;
-                mPath.moveTo(round + off, h - triangleHeight);
+        //将主体区域和三角形映射到Path上
+        RectF rectF = new RectF(shadowRadius, shadowRadius, w - shadowRadius, h - shadowRadius);
+        switch (direction) {
+            case TriangleDialog.Direction.BOTTOM:
+                rectF.bottom -= triangleHeight;
+                mPath.moveTo(radius + shadowRadius + containerOffset, rectF.bottom);
                 mPath.rLineTo(triangleWidth, 0);
                 mPath.rLineTo(-triangleWidth >> 1, triangleHeight);
                 mPath.close();
                 break;
-        }
-        mPath.addRoundRect(rectF, round, round, Path.Direction.CW);
-    }
-
-    public void init(@TriangleDialog.Mode int mode, int triangleWidth, int triangleHeight, int off, int round, int color) {
-        this.triangleWidth = triangleWidth < 0 ? 0 : triangleWidth;
-        this.triangleHeight = triangleHeight < 0 ? 0 : triangleHeight;
-        this.round = round < 0 ? 0 : round;
-        this.off = off < 0 ? 0 : off;
-
-        mMode = mode;
-        mPaint.setColor(color);
-        switch (mMode) {
-            case LEFT:
-                setPadding(triangleHeight, 0, 0, 0);
+            case TriangleDialog.Direction.LEFT:
+                rectF.left += triangleHeight;
+                mPath.moveTo(rectF.left, radius + shadowRadius + containerOffset);
+                mPath.rLineTo(0, triangleWidth);
+                mPath.rLineTo(-triangleHeight, -triangleWidth >> 1);
+                mPath.close();
                 break;
-            case TOP:
-                setPadding(0, triangleHeight, 0, 0);
+            case TriangleDialog.Direction.RIGHT:
+                rectF.right -= triangleHeight;
+                mPath.moveTo(rectF.right, radius + shadowRadius + containerOffset);
+                mPath.rLineTo(0, triangleWidth);
+                mPath.rLineTo(triangleHeight, -triangleWidth >> 1);
+                mPath.close();
                 break;
-            case RIGHT:
-                setPadding(0, 0, triangleHeight, 0);
-                break;
-            case BOTTOM:
-                setPadding(0, 0, 0, triangleHeight);
+            case TriangleDialog.Direction.TOP:
+                rectF.top += triangleHeight;
+                mPath.moveTo(radius + shadowRadius + containerOffset, rectF.top);
+                mPath.rLineTo(triangleWidth, 0);
+                mPath.rLineTo(-triangleWidth >> 1, -triangleHeight);
+                mPath.close();
                 break;
         }
+        mPath.addRoundRect(rectF, radius, radius, Path.Direction.CW);
     }
 }

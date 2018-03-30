@@ -15,14 +15,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
-import java.util.concurrent.Callable;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Predicate;
+import io.reactivex.schedulers.Schedulers;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by TK on 2016/10/25.
@@ -44,7 +45,7 @@ public class ScratchView extends View {
     //刮痕粗细
     private int mStroke = 50;
 
-    private Subscription mSubscription;
+    private Disposable mDisposable;
     private boolean isFinish;
     private OnScratchListener onScratchListener;
 
@@ -145,16 +146,15 @@ public class ScratchView extends View {
      * 检查区域
      */
     private void check() {
-        if (mSubscription != null && (!mSubscription.isUnsubscribed())) {
-            //还在计算中。。
-            return;
+        if (mDisposable != null && (!mDisposable.isDisposed())) {
+            mDisposable.dispose();
         }
         if (isFinish) {
             return;
         }
-        mSubscription = Observable.fromCallable(new Callable<Integer>() {
+        Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
-            public Integer call() {
+            public void subscribe(ObservableEmitter<Integer> e) throws Exception {
                 Bitmap bitmap = createBitmap(ScratchView.this, getWidth(), getHeight());
                 int sum = 0;
                 for (int i = 0; i < getWidth(); i++) {
@@ -165,18 +165,25 @@ public class ScratchView extends View {
                         }
                     }
                 }
-                return sum;
+                e.onNext(sum);
+                e.onComplete();
+            }
+        }).filter(new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer integer) throws Exception {
+                return integer >= getWidth() * getHeight() * ACTIVITY;
             }
         }).observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .filter(new Func1<Integer, Boolean>() {
+                .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
-                    public Boolean call(Integer integer) {
-                        return integer >= getWidth() * getHeight() * ACTIVITY;
+                    public void accept(Disposable disposable) throws Exception {
+                        mDisposable = disposable;
                     }
-                }).subscribe(new Action1<Integer>() {
+                })
+                .subscribe(new Consumer<Integer>() {
                     @Override
-                    public void call(Integer integer) {
+                    public void accept(Integer integer) throws Exception {
                         isFinish = true;
                         mAnimator.start();
                         if (onScratchListener != null) {
@@ -191,8 +198,8 @@ public class ScratchView extends View {
      * 再刮一次
      */
     public void scratchAgain() {
-        if (mSubscription != null && (!mSubscription.isUnsubscribed())) {
-            mSubscription.unsubscribe();
+        if (mDisposable != null && (!mDisposable.isDisposed())) {
+            mDisposable.dispose();
         }
         mPath.reset();
         mCoverColor = COVER_COLOR;
@@ -204,8 +211,8 @@ public class ScratchView extends View {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if (mSubscription != null) {
-            mSubscription.unsubscribe();
+        if (mDisposable != null && (!mDisposable.isDisposed())) {
+            mDisposable.dispose();
         }
     }
 

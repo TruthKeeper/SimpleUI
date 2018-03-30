@@ -6,12 +6,15 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <Button
+    <TextView
         android:id="@+id/btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="72dp"
         android:layout_centerInParent="true"
+        android:background="@color/colorAccent"
+        android:gravity="center"
         android:onClick="show"
-        android:text="显示" />
+        android:text="显示"
+        android:textColor="@android:color/white" />
 
 </RelativeLayout>

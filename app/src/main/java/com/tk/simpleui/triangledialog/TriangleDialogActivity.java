@@ -16,15 +16,25 @@ import com.tk.simpleui.triangledialog.dialog.TriangleDialog;
  */
 
 public class TriangleDialogActivity extends AppCompatActivity {
-    TriangleDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_triangle_dialog);
-          dialog = new TriangleDialog(this) {
-            @Override
-            public RecyclerView.Adapter createAdapter() {
-                return new RecyclerView.Adapter() {
+    }
+
+    public void show(View view) {
+        new TriangleDialog.Builder(this)
+//                .offX()
+//                .offY()
+//                .containerColor()
+//                .containerOffset()
+//                .paddingLeft()
+//                .paddingTop()
+//                .paddingRight()
+//                .paddingBottom()
+                .direction(TriangleDialog.Direction.TOP)
+                .adapter(new RecyclerView.Adapter() {
                     @Override
                     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                         return new RecyclerView.ViewHolder(LayoutInflater.from(parent.getContext())
@@ -39,15 +49,11 @@ public class TriangleDialogActivity extends AppCompatActivity {
 
                     @Override
                     public int getItemCount() {
-                        return 4;
+                        return 5;
                     }
-                };
-            }
-        };
-    }
-
-    public void show(View view) {
-        dialog.show(view, TriangleDialog.Mode.BOTTOM, 0,-300);
+                })
+                .build()
+                .show(view);
     }
 
 }

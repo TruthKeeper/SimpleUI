@@ -5,7 +5,10 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.annotation.IntDef;
+import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -13,35 +16,31 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.tk.simpleui.R;
 import com.tk.simpleui.common.DensityUtil;
-import com.tk.simpleui.statusbar.StatusBarHelper;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import static com.tk.simpleui.triangledialog.dialog.TriangleDialog.Mode.BOTTOM;
-import static com.tk.simpleui.triangledialog.dialog.TriangleDialog.Mode.LEFT;
-import static com.tk.simpleui.triangledialog.dialog.TriangleDialog.Mode.RIGHT;
-import static com.tk.simpleui.triangledialog.dialog.TriangleDialog.Mode.TOP;
+import static com.tk.simpleui.triangledialog.dialog.TriangleDialog.Direction.*;
 
 
 /**
  * <pre>
  *      author : TK
- *      time : 2017/8/15
+ *      time : 2018/3/30
  *      desc :
  * </pre>
  */
 
-public abstract class TriangleDialog extends Dialog {
+public class TriangleDialog extends Dialog {
+    private View anchor;
+
     /**
      * 三角箭头朝向
      */
     @IntDef({LEFT, TOP, RIGHT, BOTTOM})
     @Retention(RetentionPolicy.SOURCE)
-
-    public @interface Mode {
+    public @interface Direction {
         int LEFT = 0x01;
         int TOP = 0x02;
         int RIGHT = 0x03;
@@ -50,18 +49,57 @@ public abstract class TriangleDialog extends Dialog {
 
     private RecyclerView recyclerContent;
     private TriangleContainer triangleContainer;
-    private View anchor;
-    @Mode
-    private int mode;
-    private int distance2triangleAngle;
-    private int containerOff;
+
+    private int paddingLeft;
+    private int paddingTop;
+    private int paddingRight;
+    private int paddingBottom;
+    private int radius;
+    @Direction
+    private int direction;
+
+    private int triangleWidth;
+    private int triangleHeight;
+    private int offX;
+    private int offY;
+    private int containerOffset;
+    private int containerColor;
+
+    private int shadowRadius;
+    private int shadowColor;
+
+    private RecyclerView.Adapter adapter;
 
     public TriangleDialog(Context context) {
+        this(context, new Builder(context));
+    }
+
+    private TriangleDialog(Context context, Builder builder) {
         super(context);
+        paddingLeft = builder.paddingLeft;
+        paddingTop = builder.paddingTop;
+        paddingRight = builder.paddingRight;
+        paddingBottom = builder.paddingBottom;
+        radius = builder.radius;
+        direction = builder.direction;
+        triangleWidth = builder.triangleWidth;
+        triangleHeight = builder.triangleHeight;
+        offX = builder.offX;
+        offY = builder.offY;
+        containerOffset = builder.containerOffset;
+        containerColor = builder.containerColor;
+        shadowRadius = builder.shadowRadius;
+        shadowColor = builder.shadowColor;
+        adapter = builder.adapter;
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        //窗口之后的内容变暗。
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        if (shadowRadius > 0) {
+            //有阴影的话不自动变暗
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        } else {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        }
         setCanceledOnTouchOutside(true);
         setCancelable(true);
     }
@@ -69,163 +107,295 @@ public abstract class TriangleDialog extends Dialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.triangle_dialog);
-        triangleContainer = (TriangleContainer) findViewById(R.id.triangle_container);
-        recyclerContent = (RecyclerView) findViewById(R.id.recycler_content);
-
+        triangleContainer = new TriangleContainer(getContext());
+        recyclerContent = new RecyclerView(getContext());
+        recyclerContent.setOverScrollMode(View.OVER_SCROLL_NEVER);
         recyclerContent.setHasFixedSize(true);
         recyclerContent.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerContent.setAdapter(createAdapter());
+        recyclerContent.setAdapter(adapter);
+        triangleContainer.addView(recyclerContent);
+        setContentView(triangleContainer);
+
+        triangleContainer.prepare(paddingLeft,
+                paddingTop,
+                paddingRight,
+                paddingBottom,
+                radius,
+                direction,
+                triangleWidth,
+                triangleHeight,
+                containerOffset,
+                containerColor,
+                shadowRadius,
+                shadowColor);
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
-            int[] location = new int[2];
-            anchor.getLocationInWindow(location);
-
-            int triangleWidth = getTriangleWidth();
-            int triangleHeight = getTriangleHeight();
-            int off = 0;
-            int round = getContainerRound();
-            int bar = StatusBarHelper.getStatusBarHeight(getContext());
-
-            int minX;
-            int maxX;
-            int minY;
-            int maxY;
-            int newX = 0;
-            int newY = 0;
-
-            int viewW = getWindow().getDecorView().getMeasuredWidth();
-            int viewH = getWindow().getDecorView().getMeasuredHeight();
-
-            int windowW = getContext().getResources().getDisplayMetrics().widthPixels;
-            int windowH = getContext().getResources().getDisplayMetrics().heightPixels;
-
-            WindowManager.LayoutParams params = getWindow().getAttributes();
-            params.gravity = Gravity.LEFT | Gravity.TOP;
-            switch (mode) {
-                //三角箭头方向
-                case LEFT:
-                    minY = location[1] + anchor.getMeasuredHeight() / 2 + triangleWidth / 2 + round - viewH - bar;
-                    maxY = location[1] + anchor.getMeasuredHeight() / 2 - triangleWidth / 2 - round - bar;
-                    minY = minY < 0 ? 0 : minY;
-                    maxY = maxY > windowH ? windowH : maxY;
-
-                    newX = location[0] + anchor.getMeasuredWidth() + distance2triangleAngle;
-                    newX = newX < 0 ? 0 : newX;
-                    newX = newX > windowW ? windowW : newX;
-                    newY = location[1] + containerOff - round - bar;
-                    newY = newY < minY ? minY : newY;
-                    newY = newY > maxY ? maxY : newY;
-                    //修正
-                    containerOff = newY - location[1] + round + bar;
-                    off = (anchor.getMeasuredHeight() - triangleWidth) / 2 - containerOff;
-                    break;
-                case TOP:
-                    minX = location[0] + anchor.getMeasuredWidth() / 2 + triangleWidth / 2 + round - viewW;
-                    maxX = location[0] + anchor.getMeasuredWidth() / 2 - triangleWidth / 2 - round;
-                    minX = minX < 0 ? 0 : minX;
-                    maxX = maxX > windowW ? windowW : maxX;
-
-                    newX = location[0] + containerOff - round;
-                    newX = newX < minX ? minX : newX;
-                    newX = newX > maxX ? maxX : newX;
-                    newY = location[1] + anchor.getMeasuredHeight() + distance2triangleAngle - bar;
-                    newY = newY < 0 ? 0 : newY;
-                    newY = newY > windowH ? windowH : newY;
-                    //修正
-                    containerOff = newX - location[0] + round;
-                    off = (anchor.getMeasuredWidth() - triangleWidth) / 2 - containerOff;
-                    break;
-                case RIGHT:
-                    minY = location[1] + anchor.getMeasuredHeight() / 2 + triangleWidth / 2 + round - viewH - bar;
-                    maxY = location[1] + anchor.getMeasuredHeight() / 2 - triangleWidth / 2 - round - bar;
-                    minY = minY < 0 ? 0 : minY;
-                    maxY = maxY > windowH ? windowH : maxY;
-
-                    newX = location[0] - viewW - distance2triangleAngle;
-                    if (0 == triangleContainer.getPaddingRight()) {
-                        //未重新layout
-                        newX = newX - triangleHeight;
-                    }
-                    newX = newX < 0 ? 0 : newX;
-                    newX = newX > windowW ? windowW : newX;
-                    newY = location[1] + containerOff - round - bar;
-                    newY = newY < minY ? minY : newY;
-                    newY = newY > maxY ? maxY : newY;
-                    //修正
-                    containerOff = newY - location[1] + round + bar;
-                    off = (anchor.getMeasuredHeight() - triangleWidth) / 2 - containerOff;
-                    break;
-                case BOTTOM:
-                    minX = location[0] + anchor.getMeasuredWidth() / 2 + triangleWidth / 2 + round - viewW;
-                    maxX = location[0] + anchor.getMeasuredWidth() / 2 - triangleWidth / 2 - round;
-                    minX = minX < 0 ? 0 : minX;
-                    maxX = maxX > windowW ? windowW : maxX;
-
-                    newX = location[0] + containerOff - round;
-                    newX = newX < minX ? minX : newX;
-                    newX = newX > maxX ? maxX : newX;
-                    newY = location[1] - viewH - distance2triangleAngle - bar;
-                    if (0 == triangleContainer.getPaddingBottom()) {
-                        //未重新layout
-                        newY = newY - triangleHeight;
-                    }
-                    newY = newY < 0 ? 0 : newY;
-                    newY = newY > windowH ? windowH : newY;
-                    //修正
-                    containerOff = newX - location[0] + round;
-                    off = (anchor.getMeasuredWidth() - triangleWidth) / 2 - containerOff;
-                    break;
-            }
-
-            params.x = newX;
-            params.y = newY;
-            getWindow().setAttributes(params);
-            triangleContainer.init(mode,
-                    triangleWidth,
-                    triangleHeight,
-                    off,
-                    round,
-                    getContainerColor());
+        if (!hasFocus || anchor == null) {
+            return;
         }
+        int[] location = new int[2];
+        anchor.getLocationInWindow(location);
+        int anchorWidth = anchor.getMeasuredWidth();
+        int anchorHeight = anchor.getMeasuredHeight();
+        int dialogWidth = getWindow().getDecorView().getMeasuredWidth();
+        int dialogHeight = getWindow().getDecorView().getMeasuredHeight();
+
+        int barHeight = getStatusBarHeight(getContext());
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+        params.gravity = Gravity.START | Gravity.TOP;
+        int rawX = 0;
+        int rawY = 0;
+        switch (direction) {
+            case Direction.BOTTOM:
+                containerOffset = Math.min(containerOffset, dialogWidth - shadowRadius * 2 - radius * 2 - triangleWidth);
+                rawX = location[0] + anchorWidth / 2
+                        - triangleWidth / 2 - radius - shadowRadius
+                        + offX - containerOffset;
+                rawY = location[1] - dialogHeight - barHeight
+                        + offY;
+                break;
+            case LEFT:
+                containerOffset = Math.min(containerOffset, dialogHeight - shadowRadius * 2 - radius * 2 - triangleWidth);
+                rawX = location[0] + anchorWidth
+                        + offX;
+                rawY = location[1] + anchorHeight / 2
+                        - triangleWidth / 2 - radius - shadowRadius - barHeight
+                        + offY - containerOffset;
+                break;
+            case Direction.RIGHT:
+                containerOffset = Math.min(containerOffset, dialogHeight - shadowRadius * 2 - radius * 2 - triangleWidth);
+                rawX = location[0] - dialogWidth
+                        + offX;
+                rawY = location[1] + anchorHeight / 2
+                        - triangleWidth / 2 - radius - shadowRadius - barHeight
+                        + offY - containerOffset;
+                break;
+            case Direction.TOP:
+                containerOffset = Math.min(containerOffset, dialogWidth - shadowRadius * 2 - radius * 2 - triangleWidth);
+                rawX = location[0] + anchorWidth / 2
+                        - triangleWidth / 2 - radius - shadowRadius
+                        + offX - containerOffset;
+                rawY = location[1] + anchorHeight - barHeight
+                        + offY;
+                break;
+        }
+        params.x = rawX;
+        params.y = rawY;
+        getWindow().setAttributes(params);
+    }
+
+    @Override
+    public void show() {
     }
 
     /**
      * 显示
      *
-     * @param anchor                 锚点View，对应居中三角形
-     * @param mode                   三角形朝向
-     * @param distance2triangleAngle 三角形和锚点的间距
-     * @param containerOff           Dialog的偏移
+     * @param anchor
      */
-    public void show(View anchor, @Mode int mode, int distance2triangleAngle,
-                     int containerOff) {
+    public void show(@NonNull View anchor) {
         this.anchor = anchor;
-        this.mode = mode;
-        this.distance2triangleAngle = distance2triangleAngle;
-        this.containerOff = containerOff;
-        show();
+        super.show();
     }
 
-    public abstract RecyclerView.Adapter createAdapter();
-
-    protected int getTriangleWidth() {
-        return DensityUtil.dp2px(12);
+    private static int getStatusBarHeight(@NonNull Context context) {
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        return context.getResources().getDimensionPixelSize(resourceId);
     }
 
-    protected int getTriangleHeight() {
-        return DensityUtil.dp2px(6);
-    }
+    public static final class Builder {
+        private Context context;
 
-    protected int getContainerRound() {
-        return DensityUtil.dp2px(4);
-    }
+        private int paddingLeft = 0;
+        private int paddingTop = 0;
+        private int paddingRight = 0;
+        private int paddingBottom = 0;
+        private int radius = DensityUtil.dp2px(4);
+        private int direction = Direction.BOTTOM;
+        private int triangleWidth = DensityUtil.dp2px(12);
+        private int triangleHeight = DensityUtil.dp2px(8);
+        private int offX = 0;
+        private int offY = 0;
+        private int containerOffset = 0;
+        private int containerColor = Color.WHITE;
+        private int shadowRadius = DensityUtil.dp2px(2);
+        private int shadowColor = Color.GRAY;
+        private RecyclerView.Adapter adapter = null;
 
-    protected int getContainerColor() {
-        return Color.WHITE;
+        public Builder(Context context) {
+            this.context = context;
+        }
+
+        /**
+         * 主体区域内padding
+         *
+         * @param paddingLeft
+         * @return
+         */
+        public Builder paddingLeft(@IntRange(from = 0) int paddingLeft) {
+            this.paddingLeft = Math.max(paddingLeft, 0);
+            return this;
+        }
+
+        /**
+         * 主体区域内padding
+         *
+         * @param paddingTop
+         * @return
+         */
+        public Builder paddingTop(@IntRange(from = 0) int paddingTop) {
+            this.paddingTop = Math.max(paddingTop, 0);
+            return this;
+        }
+
+        /**
+         * 主体区域内padding
+         *
+         * @param paddingRight
+         * @return
+         */
+        public Builder paddingRight(@IntRange(from = 0) int paddingRight) {
+            this.paddingRight = Math.max(paddingRight, 0);
+            return this;
+        }
+
+        /**
+         * 主体区域内padding
+         *
+         * @param paddingBottom
+         * @return
+         */
+        public Builder paddingBottom(@IntRange(from = 0) int paddingBottom) {
+            this.paddingBottom = Math.max(paddingBottom, 0);
+            return this;
+        }
+
+        /**
+         * 主体区域圆角
+         *
+         * @param radius
+         * @return
+         */
+        public Builder radius(@IntRange(from = 0) int radius) {
+            this.radius = Math.max(radius, 0);
+            return this;
+        }
+
+        /**
+         * 箭头方向
+         *
+         * @param direction
+         * @return
+         */
+        public Builder direction(@Direction int direction) {
+            this.direction = direction;
+            return this;
+        }
+
+        /**
+         * 三角宽度
+         *
+         * @param triangleWidth
+         * @return
+         */
+        public Builder triangleWidth(@IntRange(from = 0) int triangleWidth) {
+            this.triangleWidth = Math.max(triangleWidth, 0);
+            return this;
+        }
+
+        /**
+         * 三角高度
+         *
+         * @param triangleHeight
+         * @return
+         */
+        public Builder triangleHeight(@IntRange(from = 0) int triangleHeight) {
+            this.triangleHeight = Math.max(triangleHeight, 0);
+            return this;
+        }
+
+        /**
+         * 整体x轴偏移
+         *
+         * @param offX
+         * @return
+         */
+        public Builder offX(int offX) {
+            this.offX = offX;
+            return this;
+        }
+
+        /**
+         * 整体y轴偏移
+         *
+         * @param offY
+         * @return
+         */
+        public Builder offY(int offY) {
+            this.offY = offY;
+            return this;
+        }
+
+        /**
+         * 主体区域偏移
+         *
+         * @param containerOffset
+         * @return
+         */
+        public Builder containerOffset(@IntRange(from = 0) int containerOffset) {
+            this.containerOffset = Math.max(containerOffset, 0);
+            return this;
+        }
+
+        /**
+         * 主体区域颜色
+         *
+         * @param containerColor
+         * @return
+         */
+        public Builder containerColor(@ColorInt int containerColor) {
+            this.containerColor = containerColor;
+            return this;
+        }
+
+        /**
+         * 阴影的扩散半径
+         *
+         * @param shadowRadius
+         * @return
+         */
+        public Builder shadowRadius(@IntRange(from = 0) int shadowRadius) {
+            this.shadowRadius = Math.max(shadowRadius, 0);
+            return this;
+        }
+
+        /**
+         * 阴影颜色
+         *
+         * @param shadowColor
+         * @return
+         */
+        public Builder shadowColor(@ColorInt int shadowColor) {
+            this.shadowColor = shadowColor;
+            return this;
+        }
+
+        /**
+         * 适配器
+         *
+         * @param adapter
+         * @return
+         */
+        public Builder adapter(RecyclerView.Adapter adapter) {
+            this.adapter = adapter;
+            return this;
+        }
+
+        public TriangleDialog build() {
+            return new TriangleDialog(context, this);
+        }
     }
 }
