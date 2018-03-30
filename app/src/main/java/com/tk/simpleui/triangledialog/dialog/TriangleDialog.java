@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.tk.simpleui.R;
+import com.tk.simpleui.bar.BarUtils;
 import com.tk.simpleui.common.DensityUtil;
 
 import java.lang.annotation.Retention;
@@ -136,6 +138,7 @@ public class TriangleDialog extends Dialog {
         if (!hasFocus || anchor == null) {
             return;
         }
+
         int[] location = new int[2];
         anchor.getLocationInWindow(location);
         int anchorWidth = anchor.getMeasuredWidth();

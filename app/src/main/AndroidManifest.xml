@@ -3,6 +3,7 @@
     package="com.tk.simpleui">
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -28,16 +29,16 @@
         <activity android:name=".ratingbar.RatingBarActivity" />
         <activity android:name=".line.InterestingLineActivity" />
         <activity android:name=".shopcar.ShopCarActivity" />
-        <activity android:name=".statusbar.StatusBarActivity" />
+        <activity android:name=".bar.StatusBarActivity" />
         <activity
-            android:name=".statusbar.normal.SolidActivity"
+            android:name=".bar.normal.SolidActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity android:name=".statusbar.normal.TranslucentActivity" />
-        <activity android:name=".statusbar.more.fragment.FragmentActivity" />
-        <activity android:name=".statusbar.more.drawerlayout.DrawerOneActivity" />
-        <activity android:name=".statusbar.more.drawerlayout.DrawerTwoActivity" />
+        <activity android:name=".bar.normal.TranslucentActivity" />
+        <activity android:name=".bar.more.fragment.FragmentActivity" />
+        <activity android:name=".bar.more.drawerlayout.DrawerOneActivity" />
+        <activity android:name=".bar.more.drawerlayout.DrawerTwoActivity" />
         <activity android:name=".ripple.reveal.RevealActivity" />
         <activity android:name=".expandtext.ExpandTextActivity" />
         <activity android:name=".expandtext.SampleActivity" />

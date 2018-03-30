@@ -1,5 +1,5 @@
 # Built application files
-*.apk
+#*.apk
 *.ap_
 
 # Files for the ART/Dalvik VM
@@ -38,5 +38,3 @@ captures/
 
 # Keystore files
 *.jks
-.idea
-app/src/main/java/com/tk/simpleui/swipeback/

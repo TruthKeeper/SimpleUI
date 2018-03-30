@@ -26,7 +26,6 @@ public class IndicatorActivity extends AppCompatActivity {
 
     private int msg = 0;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,47 +55,48 @@ public class IndicatorActivity extends AppCompatActivity {
     }
 
     private void refresh() {
-        IndicatorFactory.with(this)
+        IndicatorView.with()
+                .gravity(Gravity.END | Gravity.TOP)
+                .size(DensityUtil.dp2px(10))
+                .point(true)
+                .num(msg)
+                .bind(iv1);
+        IndicatorView.with()
+                .gravity(Gravity.END | Gravity.TOP)
+                .size(DensityUtil.dp2px(18))
+                .point(false)
+                .radius(DensityUtil.dp2px(2))
+                .backgroundColor(0xff1e85d4)
+                .num(msg)
+                .bind(iv2);
+        IndicatorView.with()
                 .gravity(Gravity.END | Gravity.TOP)
                 .size(DensityUtil.dp2px(12))
-                .shape(IndicatorView.Shape.POINT)
-                .text(msg)
-                .build()
-                .bind(iv1);
-        IndicatorFactory.with(this)
-                .gravity(Gravity.END | Gravity.TOP)
-                .size(DensityUtil.dp2px(18))
-                .shape(IndicatorView.Shape.CIRCLE)
-                .backgroundColor(0xff1e85d4)
-                .text(msg)
-                .build()
-                .bind(iv2);
-        IndicatorFactory.with(this)
-                .gravity(Gravity.END | Gravity.TOP)
-                .size(DensityUtil.dp2px(18))
-                .textSize(14)
-                .shape(IndicatorView.Shape.RECT)
+                .textSize(10)
+                .padding(DensityUtil.dp2px(6))
+                .point(false)
+                .radius(0)
                 .textColor(Color.BLACK)
-                .text(msg)
-                .needPlus(false)
-                .build()
+                .num(msg)
+                .upper(false)
                 .bind(iv3);
-        IndicatorFactory.with(this)
+        IndicatorView.with()
                 .gravity(Gravity.END | Gravity.TOP)
                 .size(DensityUtil.dp2px(18))
-                .shape(IndicatorView.Shape.ROUND_RECT)
-                .text(msg)
-                .needPlus(false)
-                .build()
+                .point(false)
+                .radius(Integer.MAX_VALUE)
+                .num(msg)
+                .upper(false)
                 .bind(iv4);
-        IndicatorFactory.with(this)
+        IndicatorView.with()
                 .gravity(Gravity.START | Gravity.BOTTOM)
-                .size(DensityUtil.dp2px(18))
-                .bottomMargin(DensityUtil.dp2px(6))
-                .shape(IndicatorView.Shape.CIRCLE)
-                .text(msg)
-                .needPlus(false)
-                .build()
+                .size(DensityUtil.dp2px(20))
+                .bottomMargin(DensityUtil.dp2px(10))
+                .point(false)
+                .radius(Integer.MAX_VALUE)
+                .padding(DensityUtil.dp2px(6))
+                .num(msg)
+                .upper(false)
                 .bind(iv5);
     }
 }
