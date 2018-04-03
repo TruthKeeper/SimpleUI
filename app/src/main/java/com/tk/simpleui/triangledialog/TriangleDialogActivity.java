@@ -28,7 +28,7 @@ public class TriangleDialogActivity extends AppCompatActivity {
 //                .offX()
 //                .offY()
 //                .containerColor()
-//                .containerOffset()
+//                .containerOffsetPercent()
 //                .paddingLeft()
 //                .paddingTop()
 //                .paddingRight()

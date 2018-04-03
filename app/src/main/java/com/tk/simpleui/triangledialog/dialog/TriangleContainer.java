@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -28,7 +29,7 @@ public class TriangleContainer extends FrameLayout {
 
     private int triangleWidth;
     private int triangleHeight;
-    private int containerOffset;
+    private float containerOffsetPercent;
 
     private int shadowRadius;
 
@@ -56,14 +57,14 @@ public class TriangleContainer extends FrameLayout {
                         int radius,
                         @TriangleDialog.Direction int direction,
                         int triangleWidth, int triangleHeight,
-                        int containerOffset, int containerColor,
+                        @FloatRange(from = 0, to = 1) float containerOffsetPercent, int containerColor,
                         int shadowRadius, int shadowColor) {
 
         this.radius = radius;
         this.direction = direction;
         this.triangleWidth = triangleWidth;
         this.triangleHeight = triangleHeight;
-        this.containerOffset = containerOffset;
+        this.containerOffsetPercent = containerOffsetPercent;
         this.shadowRadius = shadowRadius;
 
         mPaint.setColor(containerColor);
@@ -108,12 +109,13 @@ public class TriangleContainer extends FrameLayout {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        containerOffset = Math.min(containerOffset, w - shadowRadius * 2 - radius * 2 - triangleWidth);
+        int containerOffset;
         mPath.reset();
         //将主体区域和三角形映射到Path上
         RectF rectF = new RectF(shadowRadius, shadowRadius, w - shadowRadius, h - shadowRadius);
         switch (direction) {
             case TriangleDialog.Direction.BOTTOM:
+                containerOffset = (int) (Math.max(0, w - shadowRadius * 2 - radius * 2 - triangleWidth) * containerOffsetPercent);
                 rectF.bottom -= triangleHeight;
                 mPath.moveTo(radius + shadowRadius + containerOffset, rectF.bottom);
                 mPath.rLineTo(triangleWidth, 0);
@@ -121,6 +123,7 @@ public class TriangleContainer extends FrameLayout {
                 mPath.close();
                 break;
             case TriangleDialog.Direction.LEFT:
+                containerOffset = (int) (Math.max(0, h - shadowRadius * 2 - radius * 2 - triangleWidth) * containerOffsetPercent);
                 rectF.left += triangleHeight;
                 mPath.moveTo(rectF.left, radius + shadowRadius + containerOffset);
                 mPath.rLineTo(0, triangleWidth);
@@ -128,6 +131,7 @@ public class TriangleContainer extends FrameLayout {
                 mPath.close();
                 break;
             case TriangleDialog.Direction.RIGHT:
+                containerOffset = (int) (Math.max(0, h - shadowRadius * 2 - radius * 2 - triangleWidth) * containerOffsetPercent);
                 rectF.right -= triangleHeight;
                 mPath.moveTo(rectF.right, radius + shadowRadius + containerOffset);
                 mPath.rLineTo(0, triangleWidth);
@@ -135,6 +139,7 @@ public class TriangleContainer extends FrameLayout {
                 mPath.close();
                 break;
             case TriangleDialog.Direction.TOP:
+                containerOffset = (int) (Math.max(0, w - shadowRadius * 2 - radius * 2 - triangleWidth) * containerOffsetPercent);
                 rectF.top += triangleHeight;
                 mPath.moveTo(radius + shadowRadius + containerOffset, rectF.top);
                 mPath.rLineTo(triangleWidth, 0);

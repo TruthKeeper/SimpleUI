@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
+import android.support.annotation.FloatRange;
 import android.support.annotation.IntDef;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
@@ -16,14 +17,15 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.tk.simpleui.R;
-import com.tk.simpleui.bar.BarUtils;
 import com.tk.simpleui.common.DensityUtil;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import static com.tk.simpleui.triangledialog.dialog.TriangleDialog.Direction.*;
+import static com.tk.simpleui.triangledialog.dialog.TriangleDialog.Direction.LEFT;
+import static com.tk.simpleui.triangledialog.dialog.TriangleDialog.Direction.TOP;
+import static com.tk.simpleui.triangledialog.dialog.TriangleDialog.Direction.RIGHT;
+import static com.tk.simpleui.triangledialog.dialog.TriangleDialog.Direction.BOTTOM;
 
 
 /**
@@ -64,7 +66,7 @@ public class TriangleDialog extends Dialog {
     private int triangleHeight;
     private int offX;
     private int offY;
-    private int containerOffset;
+    private float containerOffsetPercent;
     private int containerColor;
 
     private int shadowRadius;
@@ -88,7 +90,7 @@ public class TriangleDialog extends Dialog {
         triangleHeight = builder.triangleHeight;
         offX = builder.offX;
         offY = builder.offY;
-        containerOffset = builder.containerOffset;
+        containerOffsetPercent = builder.containerOffsetPercent;
         containerColor = builder.containerColor;
         shadowRadius = builder.shadowRadius;
         shadowColor = builder.shadowColor;
@@ -126,7 +128,7 @@ public class TriangleDialog extends Dialog {
                 direction,
                 triangleWidth,
                 triangleHeight,
-                containerOffset,
+                containerOffsetPercent,
                 containerColor,
                 shadowRadius,
                 shadowColor);
@@ -138,7 +140,6 @@ public class TriangleDialog extends Dialog {
         if (!hasFocus || anchor == null) {
             return;
         }
-
         int[] location = new int[2];
         anchor.getLocationInWindow(location);
         int anchorWidth = anchor.getMeasuredWidth();
@@ -151,9 +152,11 @@ public class TriangleDialog extends Dialog {
         params.gravity = Gravity.START | Gravity.TOP;
         int rawX = 0;
         int rawY = 0;
+        int containerOffset;
         switch (direction) {
             case Direction.BOTTOM:
-                containerOffset = Math.min(containerOffset, dialogWidth - shadowRadius * 2 - radius * 2 - triangleWidth);
+                containerOffset = (int) (Math.max(0, dialogWidth - shadowRadius * 2 - radius * 2 - triangleWidth)
+                        * containerOffsetPercent);
                 rawX = location[0] + anchorWidth / 2
                         - triangleWidth / 2 - radius - shadowRadius
                         + offX - containerOffset;
@@ -161,7 +164,8 @@ public class TriangleDialog extends Dialog {
                         + offY;
                 break;
             case LEFT:
-                containerOffset = Math.min(containerOffset, dialogHeight - shadowRadius * 2 - radius * 2 - triangleWidth);
+                containerOffset = (int) (Math.max(0, dialogHeight - shadowRadius * 2 - radius * 2 - triangleWidth)
+                        * containerOffsetPercent);
                 rawX = location[0] + anchorWidth
                         + offX;
                 rawY = location[1] + anchorHeight / 2
@@ -169,7 +173,8 @@ public class TriangleDialog extends Dialog {
                         + offY - containerOffset;
                 break;
             case Direction.RIGHT:
-                containerOffset = Math.min(containerOffset, dialogHeight - shadowRadius * 2 - radius * 2 - triangleWidth);
+                containerOffset = (int) (Math.max(0, dialogHeight - shadowRadius * 2 - radius * 2 - triangleWidth)
+                        * containerOffsetPercent);
                 rawX = location[0] - dialogWidth
                         + offX;
                 rawY = location[1] + anchorHeight / 2
@@ -177,7 +182,8 @@ public class TriangleDialog extends Dialog {
                         + offY - containerOffset;
                 break;
             case Direction.TOP:
-                containerOffset = Math.min(containerOffset, dialogWidth - shadowRadius * 2 - radius * 2 - triangleWidth);
+                containerOffset = (int) (Math.max(0, dialogWidth - shadowRadius * 2 - radius * 2 - triangleWidth)
+                        * containerOffsetPercent);
                 rawX = location[0] + anchorWidth / 2
                         - triangleWidth / 2 - radius - shadowRadius
                         + offX - containerOffset;
@@ -219,10 +225,10 @@ public class TriangleDialog extends Dialog {
         private int radius = DensityUtil.dp2px(4);
         private int direction = Direction.BOTTOM;
         private int triangleWidth = DensityUtil.dp2px(12);
-        private int triangleHeight = DensityUtil.dp2px(8);
+        private int triangleHeight = DensityUtil.dp2px(10);
         private int offX = 0;
         private int offY = 0;
-        private int containerOffset = 0;
+        private float containerOffsetPercent = 0;
         private int containerColor = Color.WHITE;
         private int shadowRadius = DensityUtil.dp2px(2);
         private int shadowColor = Color.GRAY;
@@ -343,13 +349,13 @@ public class TriangleDialog extends Dialog {
         }
 
         /**
-         * 主体区域偏移
+         * 主体区域偏移，百分比
          *
-         * @param containerOffset
+         * @param containerOffsetPercent
          * @return
          */
-        public Builder containerOffset(@IntRange(from = 0) int containerOffset) {
-            this.containerOffset = Math.max(containerOffset, 0);
+        public Builder containerOffsetPercent(@FloatRange(from = 0, to = 1) float containerOffsetPercent) {
+            this.containerOffsetPercent = Math.max(containerOffsetPercent, 0);
             return this;
         }
 
